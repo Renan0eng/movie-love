@@ -1,6 +1,5 @@
 import Logo from "@/components/home/logo";
-import { ListItem } from "@/components/home/nav-item";
-import { Button } from "@/components/ui/button";
+import Menu from "@/components/home/menu";
 
 export default function HomeLayout({
   children,
@@ -8,9 +7,10 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex bg-background w-full  flex-col pt-14 pb-14 px-[15%] gap-24 justify-center items-center">
+    <div className="flex bg-background w-full  flex-col sm:pt-14 pt-8 pb-14 xl:px-[15%] sm:px-[5%] px-1 sm:gap-24 gap-8 justify-center items-center">
       {/* Header web mobile*/}
       <Logo />
+      <Menu />
       {children}
     </div>
   );
