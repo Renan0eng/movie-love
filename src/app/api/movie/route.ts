@@ -8,7 +8,7 @@ export const POST = async (req: NextRequest) => {
   const ret = await prisma.listItem.create({
     data: {
       name: name as string,
-      listId: "cm1l192py0001b0q4ibdgshfq",
+      listId: "cm1mf8os20000zwavt5zasafp",
     },
   });
 
@@ -18,7 +18,7 @@ export const POST = async (req: NextRequest) => {
 export const GET = async (req: NextRequest) => {
   const ret = await prisma.listItem.findMany({
     where: {
-      listId: "cm1l192py0001b0q4ibdgshfq",
+      listId: "cm1mf8os20000zwavt5zasafp",
     },
     orderBy: {
       createdAt: "asc",
