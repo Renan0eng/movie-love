@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Checkbox } from "../ui/checkbox"
 import { PopoverStar } from "./popover-nota"
 import { ListItem as ListItemType } from "@prisma/client"
+import { Input } from "../ui/input"
 
 export interface Props
   extends React.HTMLAttributes<HTMLLIElement> {
@@ -33,6 +34,35 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
       handleAtualizar();
     }
 
+    const handleAtualizarInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      fetch("/api/movie/name", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: e.target.value,
+          id: item.id,
+        }),
+      });
+      handleAtualizar();
+    }
+
+    const handleDelete = async () => {
+      if (item.name === "") {
+        fetch("/api/movie/delete", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: item.id,
+          }),
+        });
+        handleAtualizar();
+      }
+    }
+
     return (
       <div className="bg-background/70 w-full rounded-md sm:p-6 p-3 flex justify-between shadow-lg ">
         <div className="flex sm:gap-8 gap-4 items-center sm:w-[calc(100%-200px)] w-[calc(100%-140px)]">
@@ -43,7 +73,13 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
           />
           {/* Truncate aplicado aqui */}
           <span className="text-text font-semibold sm:text-2xl text-md truncate w-[100%] ">
-            {item.name}
+            {/* {item.name} */}
+            <Input
+              value={item.name}
+              className="w-full border-0"
+              onChange={(e) => handleAtualizarInput(e)}
+              onBlur={handleDelete}
+            />
           </span>
         </div>
         <div className="flex flex-row sm:gap-6 gap-1 items-center">

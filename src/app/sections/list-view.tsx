@@ -21,6 +21,15 @@ export default function ListView({
 
   const [newItemPopover, setNewItemPopover] = React.useState(false)
 
+  React.useEffect(() => {
+    // cria um timer para atualizar a lista a cada 5 segundos
+    const timer = setInterval(() => {
+      handleAtualizar()
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [])
+
+
   const handleAtualizar = async () => {
     const res = await fetch("/api/movie", {
       method: "GET",
@@ -31,26 +40,42 @@ export default function ListView({
     const data = await res.json();
     setData(data);
     setNewItemPopover(false);
+    setPage(1);
   };
 
-
+  const handleAddNew = async () => {
+    fetch("/api/movie", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "New Movie",
+      }),
+    }).then(() => {
+      handleAtualizar();
+    });
+  }
 
   return (
     <div className="flex sm:w-[90%] w-full gap-8 justify-around flex-col ">
       <div className="flex w-full rounded-xl shadow-xl bg-background-shadow flex-col sm:p-8 p-[4px] sm:gap-8 gap-2" >
         {/* header */}
-        <div className="flex justify-between w-full p-2 sm:p-0">
+        <div className="flex justify-center w-full p-2 sm:p-0">
           {/* Icon Btn */}
-          <PopoverNew handleAtualizar={handleAtualizar} />
+
           {/* Name */}
-          <h1 className="text-text sm:text-4xl text-xl font-semibold">Movies</h1>
+          <h1 className="text-text sm:text-4xl text-xl font-semibold text-center">Movies</h1>
           {/* Icon Btn */}
-          <Button className="rounded-full h-10 w-10 sm:h-12 sm:w-12" size="icon-xl" variant="ghost">
+          {/* <Button className="rounded-full h-10 w-10 sm:h-12 sm:w-12" size="icon-xl" variant="ghost">
             <Icon icon="icon-park-outline:peoples" className="sm:text-[30px] text-[25px]" />
-          </Button>
+          </Button> */}
         </div>
         {/* content */}
         <div className="flex flex-col gap-2 min-h-96">
+          <Button className="gap-2" size="xl" onClick={handleAddNew} variant="outline">
+            <Icon icon="lucide:plus" className="sm:text-[35px] text-[30px]" />Add new
+          </Button>
           {
             data
               .slice((page - 1) * 10, page * 10)
@@ -63,7 +88,7 @@ export default function ListView({
         </div>
 
         {/* Pagination */}
-        <ListPagination page={page} setPage={setPage} maxPages={(films.length / 10) + 1} />
+        <ListPagination page={page} setPage={setPage} maxPages={(data.length / 10) + 1} />
       </div>
       {/* btns */}
       <div className="flex justify-between">
