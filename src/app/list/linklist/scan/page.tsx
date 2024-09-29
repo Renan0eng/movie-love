@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import LinkScanView from "@/sections/list/link/scan/scan-view";
 
 
-export default async function Home(req: NextRequest) {
+export default async function Home() {
 
   return (
     <LinkScanView />

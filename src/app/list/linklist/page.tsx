@@ -6,7 +6,7 @@ import { validarToken } from "@/lib/utils";
 import { cookies } from "next/headers";
 
 
-export default async function Home(req: NextRequest) {
+export default async function Home() {
 
   const cookieStore = cookies();
   const token = cookieStore.get('token')?.value;
