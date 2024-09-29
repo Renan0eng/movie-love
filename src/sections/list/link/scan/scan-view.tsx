@@ -10,8 +10,6 @@ type Props = {};
 
 export default function LinkScanView({ }: Props) {
 
-  const [code, setCode] = React.useState<string | null>(null);
-
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
   const router = useRouter();
@@ -43,7 +41,7 @@ export default function LinkScanView({ }: Props) {
     };
   }, []);
 
-  const linkList = () => {
+  const linkList = (code: string | null | undefined) => {
     fetch('/api/list/linklist', {
       method: 'POST',
       headers: {
@@ -63,13 +61,9 @@ export default function LinkScanView({ }: Props) {
       });
   }
 
-  React.useEffect(() => {
-    alert(code);
-  }, [code]);
-
   const handleScan = (data: IDetectedBarcode[]) => {
     if (data) {
-      setCode(data[0].rawValue ? data[0].rawValue : null);
+      linkList(data[0].rawValue ? data[0].rawValue : null);
     }
   };
 
@@ -101,13 +95,6 @@ export default function LinkScanView({ }: Props) {
       </div>
       {/* Buttons */}
       <div className="flex justify-between">
-        {code && <Button className="rounded-full gap-2" size="xl" variant="outline"
-          onClick={() => {
-            linkList();
-          }}
-        >
-          <Icon icon="carbon:link" />Link
-        </Button>}
         <Button className="rounded-full gap-2" size="xl" variant="outline"
           onClick={() => {
             router.back();
