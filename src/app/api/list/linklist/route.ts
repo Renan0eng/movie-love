@@ -59,6 +59,8 @@ export const POST = async (req: NextRequest) => {
   // linka a nova lista ao usuário
   const { code } = await req.json();
 
+  console.log("code:", code);
+
   await prisma.user.update({
     where: {
       id: userId,
