@@ -5,13 +5,17 @@ import { ListItem as ListItemType, Prisma, Rating } from "@prisma/client";
 import QRCode from "react-qr-code";
 import Link from "next/link";
 
-export default function ListLinkView() {
+type Props = {
+  listId: string | undefined;
+};
+
+export default function ListLinkView({ listId }: Props) {
 
   return (
     <div className="flex sm:w-[90%] w-full gap-8 flex-col justify-center">
       {/* qr code */}
       <div className="flex w-full justify-center">
-        <QRCode value="Reskljfgnsnrn98233ndsfsfsdfsfnan" bgColor="#1D1C22" fgColor="#fff" />
+        <QRCode value={listId || ""} bgColor="#1D1C22" fgColor="#fff" />
       </div>
       {/* btns */}
       <div className="flex justify-between">

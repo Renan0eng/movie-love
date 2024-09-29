@@ -2,17 +2,16 @@
 import React, { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from '@iconify/react';
-import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner';
+import { IDetectedBarcode, Scanner, } from '@yudiel/react-qr-scanner';
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
-interface QRCodeData {
-  text: string;
-}
 
 export default function LinkScanView({ }: Props) {
-  const [data, setData] = React.useState<QRCodeData | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     const getVideoStream = async () => {
@@ -41,10 +40,30 @@ export default function LinkScanView({ }: Props) {
     };
   }, []);
 
+  const linkList = (code: string | null) => {
+    fetch('api/list/linklist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        code: code,
+      }),
+    })
+      .then(response => response.json())
+      .then(() => {
+        router.push('/list');
+        console.log('Success');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
   const handleScan = (data: IDetectedBarcode[]) => {
     if (data) {
-      setData(data[0].rawValue ? { text: data[0].rawValue } : null);
       alert(data[0].rawValue ? data[0].rawValue : null);
+      linkList(data[0].rawValue ? data[0].rawValue : null);
     }
   };
 
@@ -76,8 +95,12 @@ export default function LinkScanView({ }: Props) {
       </div>
       {/* Buttons */}
       <div className="flex justify-between">
-        <Button className="rounded-full gap-2" size="xl" variant="outline">
-          <Icon icon="carbon:scan-alt" />Scan
+        <Button className="rounded-full gap-2" size="xl" variant="outline"
+          onClick={() => {
+            router.back();
+          }}
+        >
+          <Icon icon="carbon:arrow-left" />Back
         </Button>
       </div>
     </div>

@@ -100,15 +100,11 @@ export const GET = async (req: NextRequest) => {
   // Obter o JWT do cabeçalho do cookie token
   let token = req.cookies.get("token")?.value;
 
-  console.log("token", token);
-
   let userId: string | null = null;
 
   if (!token) {
     // Se não houver token, cria um novo usuário e gera um novo JWT
     userId = await criarNovoUsuario();
-
-    console.log("userId", userId);
 
     token = jwt.sign(
       { id: userId }, // Payload do JWT
