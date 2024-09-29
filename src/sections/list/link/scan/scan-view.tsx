@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from '@iconify/react';
-import { Scanner } from '@yudiel/react-qr-scanner';
+import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner';
 
 type Props = {};
 
@@ -41,10 +41,10 @@ export default function LinkScanView({ }: Props) {
     };
   }, []);
 
-  const handleScan = (data: any) => {
+  const handleScan = (data: IDetectedBarcode[]) => {
     if (data) {
-      setData(data);
-      alert(JSON.stringify(data));
+      setData(data[0].rawValue ? { text: data[0].rawValue } : null);
+      alert(data[0].rawValue ? { text: data[0].rawValue } : null);
     }
   };
 
