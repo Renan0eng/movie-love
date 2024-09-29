@@ -14,24 +14,30 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String?   @unique
-  name      String
-  password  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  lists     List[]
-  ratings   Rating[]
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  name          String
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  lists         List[]    @relation(name: "ListUsers")
+  ratings       Rating[]
+  masterOfLists List[]    @relation(name: "MasterUser")
 }
 
 model List {
   id        String     @id @default(cuid())
+  name      String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   deletedAt DateTime?
-  users     User[]
+  master    User       @relation(name: "MasterUser", fields: [masterId], references: [id])
+  masterId  String
+  users     User[]     @relation(name: "ListUsers")
   listItems ListItem[]
+
+  @@index([masterId], name: "masterId")
 }
 
 model ListItem {

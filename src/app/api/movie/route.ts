@@ -62,6 +62,7 @@ export const POST = async (req: NextRequest) => {
             id: userId, // Conecta o usuário à nova lista
           },
         },
+        masterId: userId,
       },
     });
   }
@@ -151,6 +152,7 @@ export const GET = async (req: NextRequest) => {
             id: userId, // Conecta o usuário à nova lista
           },
         },
+        masterId: userId,
       },
     });
   }

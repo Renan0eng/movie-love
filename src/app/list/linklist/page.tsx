@@ -8,6 +8,8 @@ import { cookies } from "next/headers";
 
 export default async function Home() {
 
+  let master = false;
+
   const cookieStore = cookies();
   const token = cookieStore.get('token')?.value;
 
@@ -23,7 +25,10 @@ export default async function Home() {
     },
   });
 
+  if (lista?.masterId === userId) {
+    master = true;
+  }
   return (
-    <ListLinkView listId={lista?.id} />
+    <ListLinkView list={lista} master={master} />
   );
 }

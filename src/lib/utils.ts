@@ -70,6 +70,7 @@ export const getLista = async (
             id: userId, // Conecta o usuário à nova lista
           },
         },
+        masterId: userId,
       },
     });
   }
