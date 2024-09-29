@@ -6,6 +6,7 @@ import { List } from "@prisma/client";
 import QRCode from "react-qr-code";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 
 type Props = {
   list: List | null;
@@ -15,6 +16,8 @@ type Props = {
 export default function ListLinkView({ list, master }: Props) {
 
   const [name, setName] = React.useState<string>("");
+
+  const router = useRouter();
 
   React.useEffect(() => {
     setName(list?.name || "");
@@ -40,6 +43,7 @@ export default function ListLinkView({ list, master }: Props) {
       },
       body: JSON.stringify({ id: list?.id }),
     }).then(() => {
+      router.push('/list');
       console.log('unconnected');
     });
   }
@@ -67,7 +71,7 @@ export default function ListLinkView({ list, master }: Props) {
       {/* btns */}
       <div className="flex justify-between">
         {!master ?
-          <Button className="rounded-full gap-2" size="xl" variant="outline" onClick={handleUnConnect}><Icon icon="mingcute:unlink-fill" />Scan</Button> :
+          <Button className="rounded-full gap-2" size="xl" variant="outline" onClick={handleUnConnect}><Icon icon="mingcute:unlink-fill" />Unconnect</Button> :
           <Link href="/list/linklist/scan">
             <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:scan-alt" />Scan</Button>
           </Link>}
