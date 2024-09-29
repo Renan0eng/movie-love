@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from '@iconify/react';
 import { IDetectedBarcode, Scanner, } from '@yudiel/react-qr-scanner';
@@ -12,11 +12,11 @@ export default function LinkScanView({ }: Props) {
 
   const [code, setCode] = React.useState<string | null>(null);
 
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
   const router = useRouter();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const getVideoStream = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -44,7 +44,7 @@ export default function LinkScanView({ }: Props) {
   }, []);
 
   const linkList = () => {
-    fetch('api/list/linklist', {
+    fetch('/api/list/linklist', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export default function LinkScanView({ }: Props) {
             linkList();
           }}
         >
-          <Icon icon="carbon:arrow-left" />Back
+          <Icon icon="carbon:link" />Link
         </Button>}
         <Button className="rounded-full gap-2" size="xl" variant="outline"
           onClick={() => {

@@ -11,6 +11,8 @@ export const POST = async (req: NextRequest) => {
   // Obter o JWT do cabeçalho do cookie token
   let token = req.cookies.get("token")?.value;
 
+  console.log("token:", token);
+
   let userId: string | null = null;
 
   if (!token) {
@@ -74,15 +76,8 @@ export const POST = async (req: NextRequest) => {
     },
   });
 
-  const ret = await prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: {},
-  });
-
   // Envia o token JWT no cabeçalho 'Set-Cookie'
-  const response = NextResponse.json({ ret });
+  const response = NextResponse.json({ success: true });
   response.cookies.set("token", token, {
     httpOnly: true, // Proteger contra ataques XSS
     maxAge: 60 * 60, // O token expira em 1 hora
