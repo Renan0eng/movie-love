@@ -44,7 +44,7 @@ export default function LinkScanView({ }: Props) {
   const handleScan = (data: IDetectedBarcode[]) => {
     if (data) {
       setData(data[0].rawValue ? { text: data[0].rawValue } : null);
-      alert(data[0].rawValue ? { text: data[0].rawValue } : null);
+      alert(data[0].rawValue ? data[0].rawValue : null);
     }
   };
 
