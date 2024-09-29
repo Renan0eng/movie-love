@@ -22,6 +22,9 @@ export default function ListLinkView({ listId }: Props) {
         <Link href="/list/linklist/scan">
           <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:scan-alt" />Scan</Button>
         </Link>
+        <Link href="/list">
+          <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:arrow-left" />Back</Button>
+        </Link>
       </div>
     </div >
   );
