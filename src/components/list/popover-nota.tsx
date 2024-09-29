@@ -39,7 +39,7 @@ const PopoverStar = React.forwardRef<HTMLDataListElement, Props>(
     return (
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
         <PopoverTrigger asChild >
-          <Icon icon="ic:outline-star" className={cn(starVariants({ variant: star ? "active" : "default" }))} onClick={() => setStar(!star)} />
+          <Icon icon="ic:outline-star" className={cn(starVariants({ variant: star ? "active" : "default" }))} />
         </PopoverTrigger>
         <PopoverContent className="w-80 rounded-xl bg-background-shadow border-white/10">
           <div className="grid gap-2">
@@ -51,22 +51,10 @@ const PopoverStar = React.forwardRef<HTMLDataListElement, Props>(
             </div>
             <div className="grid gap-2">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="rating">Rating</Label>
                 <div className="flex w-full max-w-sm items-center space-x-2">
-                  <RatingInput />
+                  <RatingInput setPopoverOpen={setPopoverOpen} setStar={setStar} />
                 </div>
               </div>
-              <Button
-                className="w-full"
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  setStar(true)
-                  setPopoverOpen(false);
-                }}
-              >
-                Save
-              </Button>
             </div>
           </div>
         </PopoverContent>
@@ -80,12 +68,20 @@ export { PopoverStar }
 
 import { useState } from "react";
 
-const RatingInput = ({ totalStars = 5 }) => {
+type RatingInputProps = {
+  totalStars?: number;
+  setPopoverOpen: (value: boolean) => void;
+  setStar: (star: boolean) => void;
+};
+
+const RatingInput = ({ totalStars = 5, setPopoverOpen, setStar }: RatingInputProps) => {
   const [rating, setRating] = useState(0);  // Armazena o valor da avaliação
   const [hover, setHover] = useState(0);    // Armazena a estrela que o usuário está passando o mouse
 
   const handleRating = (value: number) => {
     setRating(value);
+    setPopoverOpen(false);
+    setStar(true);
   };
 
   return (

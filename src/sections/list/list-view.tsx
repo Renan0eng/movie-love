@@ -4,11 +4,18 @@ import { ListItem } from "@/components/list/list-item";
 import { ListPagination } from "@/components/list/list-pagination";
 import { Button } from "@/components/ui/button";
 import { Icon } from '@iconify/react';
-import { PopoverNew } from "@/components/list/popover-new-item";
-import { ListItem as ListItemType } from "@prisma/client";
+import { ListItem as ListItemType, Prisma, Rating } from "@prisma/client";
+import Link from "next/link";
+
+
+export type ListItemTypeWithRating = Prisma.ListItemGetPayload<{
+  include: {
+    rating: true
+  }
+}>
 
 type Props = {
-  films: ListItemType[]
+  films: ListItemTypeWithRating[]
 }
 
 export default function ListView({
@@ -39,8 +46,6 @@ export default function ListView({
     });
     const data = await res.json();
     setData(data);
-    setNewItemPopover(false);
-    setPage(1);
   };
 
   const handleAddNew = async () => {
@@ -73,7 +78,7 @@ export default function ListView({
         </div>
         {/* content */}
         <div className="flex flex-col gap-2 min-h-96">
-          <Button className="gap-2" size="xl" onClick={handleAddNew} variant="outline">
+          <Button className="gap-2 rounded-xl" size="xl" onClick={handleAddNew} variant="outline">
             <Icon icon="lucide:plus" className="sm:text-[35px] text-[30px]" />Add new
           </Button>
           {
@@ -92,7 +97,9 @@ export default function ListView({
       </div>
       {/* btns */}
       <div className="flex justify-between">
-        <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="mage:qr-code" />Link list</Button>
+        <Link href="/list/link">
+          <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="mage:qr-code" />Link list</Button>
+        </Link>
         <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="bi:gear" />Personalize</Button>
       </div>
     </div >

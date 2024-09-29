@@ -1,8 +1,8 @@
 import React from "react";
-import ListView from "../../sections/list/list-view";
 import { getLista } from "@/lib/utils";
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
+import ListLinkView from "@/sections/list/link/link-view";
 
 
 export default async function Home(req: NextRequest) {
@@ -13,6 +13,6 @@ export default async function Home(req: NextRequest) {
   const films = await getLista(token as string);
 
   return (
-    <ListView films={films} />
+    <ListLinkView films={films} />
   );
 }
