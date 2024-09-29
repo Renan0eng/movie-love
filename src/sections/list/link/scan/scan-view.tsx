@@ -62,7 +62,7 @@ export default function LinkScanView({ }: Props) {
 
   const handleScan = (data: IDetectedBarcode[]) => {
     if (data) {
-      alert(data[0].rawValue ? data[0].rawValue : null);
+      // alert(data[0].rawValue ? data[0].rawValue : null);
       linkList(data[0].rawValue ? data[0].rawValue : null);
     }
   };
