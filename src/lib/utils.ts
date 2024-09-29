@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import prisma from "./db";
 import { NextRequest } from "next/server";
 import { ListItem } from "@prisma/client";
-import { ListItemTypeWithRating } from "@/sections/list-view";
+import { ListItemTypeWithRating } from "@/sections/list/list-view";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

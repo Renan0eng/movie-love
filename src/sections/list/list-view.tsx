@@ -63,7 +63,7 @@ export default function ListView({
   }
 
   return (
-    <div className="flex sm:w-[90%] w-full gap-8 justify-around flex-col ">
+    <div className="flex sm:w-[90%] w-full gap-8 justify-around flex-col">
       <div className="flex w-full rounded-xl shadow-xl bg-background-shadow flex-col sm:p-8 p-[4px] sm:gap-8 gap-2" >
         {/* header */}
         <div className="flex justify-center w-full p-2 sm:p-0">
@@ -77,7 +77,7 @@ export default function ListView({
           </Button> */}
         </div>
         {/* content */}
-        <div className="flex flex-col gap-2 min-h-96">
+        <div className="flex flex-col gap-2 min-h-96 p-3">
           <Button className="gap-2 rounded-xl" size="xl" onClick={handleAddNew} variant="outline">
             <Icon icon="lucide:plus" className="sm:text-[35px] text-[30px]" />Add new
           </Button>
@@ -97,7 +97,7 @@ export default function ListView({
       </div>
       {/* btns */}
       <div className="flex justify-between">
-        <Link href="/list/link">
+        <Link href="/list/linklist">
           <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="mage:qr-code" />Link list</Button>
         </Link>
         <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="bi:gear" />Personalize</Button>
