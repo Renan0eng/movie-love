@@ -44,8 +44,7 @@ export default function LinkScanView({ }: Props) {
   const handleScan = (data: any) => {
     if (data) {
       setData(data);
-      console.log("Scanner", data);
-
+      alert(JSON.stringify(data));
     }
   };
 
