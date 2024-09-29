@@ -32,6 +32,18 @@ export default function ListLinkView({ list, master }: Props) {
     });
   };
 
+  const handleUnConnect = () => {
+    fetch('/api/list/unconnect', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: list?.id }),
+    }).then(() => {
+      console.log('unconnected');
+    });
+  }
+
   return (
     <div className="flex sm:w-[90%] w-full gap-8 flex-col justify-center">
       {/* title */}
@@ -47,16 +59,18 @@ export default function ListLinkView({ list, master }: Props) {
             onBlur={handleNameEdit}
           />
         </div>
-        : <h2 className="text-2xl text-center text-text font-bold">{name}</h2>}
+        : <h2 className="text-2xl text-center text-primary font-bold">{name}</h2>}
       {/* qr code */}
       <div className="flex w-full justify-center">
         <QRCode value={list?.id || ""} bgColor="#1D1C22" fgColor="#fff" />
       </div>
       {/* btns */}
       <div className="flex justify-between">
-        <Link href="/list/linklist/scan">
-          <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:scan-alt" />Scan</Button>
-        </Link>
+        {!master ?
+          <Button className="rounded-full gap-2" size="xl" variant="outline" onClick={handleUnConnect}><Icon icon="mingcute:unlink-fill" />Scan</Button> :
+          <Link href="/list/linklist/scan">
+            <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:scan-alt" />Scan</Button>
+          </Link>}
         <Link href="/list">
           <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:arrow-left" />Back</Button>
         </Link>
