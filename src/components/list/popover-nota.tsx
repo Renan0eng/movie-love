@@ -85,43 +85,56 @@ const RatingInput = ({ totalStars = 5, setPopoverOpen, setStar, id, handleAtuali
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ rating: value, id: id }),
-    }).then((response) => {
-      if (response.ok) {
-        console.log('Success');
-        handleAtualizar();
-      }
-    }).catch((error) => {
-      console.error('Error:', error);
-    });
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log('Success');
+          handleAtualizar();
+        }
+      })
+      .catch((error: any) => {
+        console.error('Error:', error);
+      });
+
     setRating(value);
     setPopoverOpen(false);
     setStar(true);
   };
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row space-x-1"> {/* Adicionando espaçamento entre as estrelas */}
       {[...Array(totalStars)].map((_, index) => {
         const ratingValue = index + 1;
 
         return (
-          <label key={index} >
+          <label key={index} className="flex items-center"> {/* Flex para centralizar o ícone */}
             <input
               type="radio"
               name="rating"
               value={ratingValue}
               onClick={() => handleRating(ratingValue)}
-              style={{ display: "none" }}
+              style={{ display: "none" }} // Oculta o input
             />
-            <Icon
-              icon="ic:outline-star"
-              className={`text-white cursor-pointer transition-colors duration-400 ${ratingValue <= (hover || rating) ? "text-yellow-400" : "text-gray-400"
-                }`}
+            <div
+              className={`flex justify-center items-center cursor-pointer transition-colors duration-400 ${ratingValue <= (hover || rating) ? "text-yellow-400" : "text-gray-400"}`}
               onMouseEnter={() => setHover(ratingValue)}
               onMouseLeave={() => setHover(0)}
-              // onClick={() => handleRating(ratingValue)}
-              width={30}
-              height={30}
-            />
+              onClick={() => handleRating(ratingValue)}
+              aria-label={`Avaliar com ${ratingValue} estrela${ratingValue > 1 ? 's' : ''}`} // Acessibilidade
+              role="button" // Acessibilidade
+              tabIndex={0} // Permite que o elemento receba foco
+              onKeyPress={(e) => { // Permite a ativação via teclado
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleRating(ratingValue);
+                }
+              }}
+            >
+              <Icon
+                icon="ic:outline-star"
+                width={40} // Aumenta a largura para melhor toque
+                height={40} // Aumenta a altura para melhor toque
+              />
+            </div>
           </label>
         );
       })}
