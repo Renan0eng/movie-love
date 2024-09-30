@@ -102,7 +102,7 @@ export default function ListLinkView({ list, master }: Props) {
       <div className="flex flex-col items-center gap-4">
         <div className="flex gap-4 justify-center items-center cursor-copy"
           onClick={() => {
-            navigator.clipboard.writeText(`https://aipex.renannardi.com/list/linklist/url/${list?.id || ""}`);
+            navigator.clipboard.writeText(`https://movie.renannardi.com/list/linklist/url/${list?.id || ""}`);
             setCopyText("Code copied !");
             setCopySuccess(true);
           }}
