@@ -15,6 +15,14 @@ export const POST = async (req: NextRequest) => {
 
   const { id }: { id: string } = await req.json();
 
+  // deleta os ranks do usuario na lista
+
+  await prisma.rating.deleteMany({
+    where: {
+      userId: userId,
+    },
+  });
+
   // deconecta o usuario da lista
 
   await prisma.user.update({
