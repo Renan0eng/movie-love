@@ -64,7 +64,7 @@ export default function ListView({
 
   return (
     <div className="flex sm:w-[90%] w-full gap-8 justify-around flex-col">
-      <div className="flex w-full rounded-xl shadow-xl bg-background-shadow flex-col sm:p-8 p-[4px] sm:gap-8 gap-2" >
+      <div className="flex w-full rounded-xl shadow-xl bg-background-shadow flex-col sm:p-8 p-[4px] sm:gap-8 gap-2 py-3" >
         {/* header */}
         <div className="flex justify-center w-full p-2 sm:p-0">
           {/* Icon Btn */}

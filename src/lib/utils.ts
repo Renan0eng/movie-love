@@ -4,8 +4,6 @@ import { twMerge } from "tailwind-merge";
 
 import jwt from "jsonwebtoken";
 import prisma from "./db";
-import { NextRequest } from "next/server";
-import { ListItem } from "@prisma/client";
 import { ListItemTypeWithRating } from "@/sections/list/list-view";
 
 export function cn(...inputs: ClassValue[]) {
@@ -108,7 +106,10 @@ export const criarNovoUsuario = async (): Promise<string> => {
 
 export const validarToken = async (
   token: string | null | undefined
-): Promise<string> => {
+): Promise<{
+  userId: string | null;
+  token: string;
+}> => {
   let userId: string | null = null;
 
   if (!token) {
@@ -137,7 +138,16 @@ export const validarToken = async (
         process.env.JWT_SECRET as string // Chave secreta
         // { expiresIn: "1h" } // Expiração de 1 hora
       );
+
+      const host = process.env.NEXT_PUBLIC_HOST || "http://localhost:3000"; // Certifique-se de ter o host definido
+
+      await fetch(`${host}/api/set-token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: token }),
+      });
     }
   }
-  return userId;
+
+  return { userId, token };
 };

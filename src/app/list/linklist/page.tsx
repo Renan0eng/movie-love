@@ -13,13 +13,13 @@ export default async function Home() {
   const cookieStore = cookies();
   const token = cookieStore.get('token')?.value;
 
-  const userId = await validarToken(token);
+  const userId = (await validarToken(token)).userId;
 
   const lista = await prisma.list.findFirst({
     where: {
       users: {
         some: {
-          id: userId,
+          id: userId || "",
         },
       },
     },

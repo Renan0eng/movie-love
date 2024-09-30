@@ -6,7 +6,7 @@ import { List } from "@prisma/client";
 import QRCode from "react-qr-code";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Props = {
@@ -16,9 +16,13 @@ type Props = {
 
 export default function ListLinkView({ list, master }: Props) {
 
+  const pathName = usePathname();
+
   const [name, setName] = React.useState<string>("");
 
   const [copySuccess, setCopySuccess] = React.useState(false);
+
+  const [copyText, setCopyText] = React.useState("Copy");
 
   const router = useRouter();
 
@@ -82,14 +86,31 @@ export default function ListLinkView({ list, master }: Props) {
       </div>
       {/* code  copy paste */}
       <div className="flex flex-col items-center gap-4">
-        <p className="text-center text-text text-lg">Or copy this code and paste it in the app</p>
+        <p className="text-center text-text text-lg">Copy this code to share or copy the link</p>
         <div className="flex gap-4 justify-center items-center cursor-copy"
           onClick={() => {
             navigator.clipboard.writeText(list?.id || "");
+            setCopyText("Code copied !");
             setCopySuccess(true);
           }}
         >
-          <p className="text-center text-primary text-2xl font-bold">{list?.id}</p> <Icon icon="streamline:copy-paste" className="text-primary text-3xl" />
+          <p className="text-center text-primary text-2xl font-bold">
+            Copy code
+          </p> <Icon icon="streamline:copy-paste" className="text-primary text-3xl" />
+        </div>
+      </div>
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex gap-4 justify-center items-center cursor-copy"
+          onClick={() => {
+            navigator.clipboard.writeText(`https://aipex.renannardi.com/list/linklist/url/${list?.id || ""}`);
+            setCopyText("Code copied !");
+            setCopySuccess(true);
+          }}
+        >
+          <p className="text-center text-primary text-2xl font-bold">
+            Copy link
+          </p> <Icon icon="carbon:link"
+            className="text-primary text-3xl" />
         </div>
       </div>
       <Alert
@@ -101,7 +122,7 @@ export default function ListLinkView({ list, master }: Props) {
           <Icon icon="streamline:copy-paste" className="text-success text-xl" />
         </AlertTitle>
         <AlertDescription>
-          Copied !
+          {copyText}
         </AlertDescription>
       </Alert>
       {/* btns */}

@@ -9,7 +9,7 @@ export const POST = async (req: NextRequest) => {
 
   const token = req.cookies.get("token")?.value;
 
-  const userId = (await validarToken(token)) as string;
+  const userId = (await validarToken(token)).userId as string;
 
   console.log("userId", userId);
 
