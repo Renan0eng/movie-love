@@ -48,13 +48,33 @@ export const POST = async (req: NextRequest) => {
 
   console.log("userId", userId);
 
-  await prisma.list.deleteMany({
+  const list = await prisma.list.findFirst({
     where: {
       users: {
         some: {
           id: userId,
         },
       },
+    },
+  });
+
+  const listItems = await prisma.listItem.findMany({
+    where: {
+      listId: list?.id,
+    },
+  });
+
+  listItems.forEach(async (item) => {
+    await prisma.listItem.delete({
+      where: {
+        id: item.id,
+      },
+    });
+  });
+
+  await prisma.list.delete({
+    where: {
+      id: list?.id,
     },
   });
 
