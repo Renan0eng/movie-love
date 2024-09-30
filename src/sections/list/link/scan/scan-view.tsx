@@ -101,7 +101,7 @@ export default function LinkScanView({ }: Props) {
       {/* input */}
       <div className="flex flex-col gap-2 px-4 justify-center items-center">
         <Label htmlFor="code" className="text-text text-md">Or paste the code here</Label>
-        <Input type="text" className=" bg-background justify-center items-center text-text" value={code} onChange={(e) => setCode(e.target.value)} />
+        <Input type="text" className="rounded-full bg-background justify-center items-center text-text" value={code} onChange={(e) => setCode(e.target.value)} />
       </div>
       {/* Buttons */}
       <div className="flex justify-between">

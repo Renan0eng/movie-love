@@ -3,13 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { validarToken } from "@/lib/utils";
 
-// Tipagem para o payload do JWT
-interface JwtPayload {
-  id: string;
-}
-
 export const POST = async (req: NextRequest) => {
   // Obter o JWT do cabeçalho do cookie token
+  console.log("req.cookies");
 
   const token = req.cookies.get("token")?.value;
 
@@ -38,14 +34,4 @@ export const POST = async (req: NextRequest) => {
   const response = NextResponse.json({ success: true });
 
   return response;
-};
-
-// Função para criar um novo usuário fictício
-const criarNovoUsuario = async (): Promise<string> => {
-  const newUser = await prisma.user.create({
-    data: {
-      name: "New User", // Pode personalizar este valor
-    },
-  });
-  return newUser.id; // Retorna o ID do novo usuário
 };
