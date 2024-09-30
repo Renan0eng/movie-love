@@ -44,55 +44,42 @@ export const POST = async (req: NextRequest) => {
     }
   }
 
-  // Remove as listas lincadas ao usuário e deleta elas
+  // cria uma nota para o filme
 
-  console.log("userId", userId);
+  const { id, rating }: { id: string; rating: number } = await req.json();
 
-  const list = await prisma.list.findFirst({
+  const ratingExists = await prisma.rating.findFirst({
     where: {
-      users: {
-        some: {
-          id: userId,
-        },
-      },
+      listItemId: id,
+      userId: userId,
     },
   });
 
-  const listItems = await prisma.listItem.findMany({
-    where: {
-      listId: list?.id,
-    },
-  });
-
-  listItems.forEach(async (item) => {
-    await prisma.listItem.delete({
+  if (ratingExists) {
+    await prisma.rating.update({
       where: {
-        id: item.id,
+        id: ratingExists.id,
+      },
+      data: {
+        rating: rating,
       },
     });
-  });
 
-  await prisma.list.delete({
-    where: {
-      id: list?.id,
-    },
-  });
+    const response = NextResponse.json({ success: true });
+    response.cookies.set("token", token, {
+      httpOnly: true, // Proteger contra ataques XSS
+      // maxAge: 60 * 60, // O token expira em 1 hora
+      path: "/", // O cookie é válido para todo o site
+    });
 
-  // linka a nova lista ao usuário
-  const { code } = await req.json();
+    return response;
+  }
 
-  console.log("code:", code);
-
-  await prisma.user.update({
-    where: {
-      id: userId,
-    },
+  const newRating = await prisma.rating.create({
     data: {
-      lists: {
-        connect: {
-          id: code,
-        },
-      },
+      rating: rating,
+      listItemId: id,
+      userId: userId,
     },
   });
 

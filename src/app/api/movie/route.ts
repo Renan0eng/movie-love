@@ -80,7 +80,7 @@ export const POST = async (req: NextRequest) => {
   const response = NextResponse.json({ name: ret.name });
   response.cookies.set("token", token, {
     httpOnly: true, // Proteger contra ataques XSS
-    maxAge: 60 * 60, // O token expira em 1 hora
+    // maxAge: 60 * 60, // O token expira em 1 hora
     path: "/", // O cookie é válido para todo o site
   });
 

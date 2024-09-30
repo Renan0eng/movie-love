@@ -11,7 +11,8 @@ const alertVariants = cva(
         default: "bg-background text-foreground",
         destructive:
           "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-        success: "border-success/50 text-success dark:border-success [&>svg]:text-success",
+        success: "border-success text-success dark:border-success [&>svg]:text-success",
+        error: "border-error text-error dark:border-error [&>svg]:text-error",
       },
       active: {
         true: "opacity-100",

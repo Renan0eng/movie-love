@@ -5,9 +5,10 @@ import { Checkbox } from "../ui/checkbox";
 import { PopoverStar } from "./popover-nota";
 import { ListItem as ListItemType } from "@prisma/client";
 import { Input } from "../ui/input";
+import { ListItemTypeWithRating } from "@/sections/list/list-view";
 
 export interface Props extends React.HTMLAttributes<HTMLLIElement> {
-  item: ListItemType;
+  item: ListItemTypeWithRating;
   handleAtualizar: () => void;
 }
 
@@ -114,7 +115,7 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
         </div>
         <div className="flex flex-row sm:gap-6 gap-1 items-center">
           <div className="flex flex-row sm:gap-3 gap-2 items-center">
-            <span className="text-text-secondary sm:text-md text-sm">0</span>
+            <span className="text-text-secondary sm:text-md text-sm">{item.rating[0]?.rating}</span>
             <div className="flex sm:w-[65px] w-[48px] relative">
               <Image
                 src="/Avatar.png"
@@ -131,9 +132,9 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
                 alt=""
               />
             </div>
-            <span className="text-text-secondary sm:text-md text-sm">0</span>
+            <span className="text-text-secondary sm:text-md text-sm">{item.rating[1]?.rating}</span>
           </div>
-          <PopoverStar star={star} setStar={setStar} />
+          <PopoverStar star={star} setStar={setStar} id={item.id} handleAtualizar={handleAtualizar} />
         </div>
       </div>
     );

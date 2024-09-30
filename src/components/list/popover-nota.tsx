@@ -2,13 +2,9 @@
 import * as React from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Icon } from '@iconify/react';
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
-import { Button } from "../ui/button";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 
 const starVariants = cva(
   "text-text sm:text-4xl text-3xl transition-colors duration-200",
@@ -29,12 +25,14 @@ const starVariants = cva(
 
 export interface Props
   extends React.HTMLAttributes<HTMLLIElement> {
+  handleAtualizar: () => void
   setStar: (star: boolean) => void
   star: boolean
+  id: string
 }
 
 const PopoverStar = React.forwardRef<HTMLDataListElement, Props>(
-  ({ className, setStar, star, ...props }, ref) => {
+  ({ className, setStar, star, id, handleAtualizar, ...props }, ref) => {
     const [popoverOpen, setPopoverOpen] = React.useState(false);
     return (
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -52,7 +50,7 @@ const PopoverStar = React.forwardRef<HTMLDataListElement, Props>(
             <div className="grid gap-2">
               <div className="flex flex-col gap-2">
                 <div className="flex w-full max-w-sm items-center space-x-2">
-                  <RatingInput setPopoverOpen={setPopoverOpen} setStar={setStar} />
+                  <RatingInput setPopoverOpen={setPopoverOpen} setStar={setStar} id={id} handleAtualizar={handleAtualizar} />
                 </div>
               </div>
             </div>
@@ -69,16 +67,32 @@ export { PopoverStar }
 import { useState } from "react";
 
 type RatingInputProps = {
+  handleAtualizar: () => void;
   totalStars?: number;
   setPopoverOpen: (value: boolean) => void;
   setStar: (star: boolean) => void;
+  id: string;
 };
 
-const RatingInput = ({ totalStars = 5, setPopoverOpen, setStar }: RatingInputProps) => {
+const RatingInput = ({ totalStars = 5, setPopoverOpen, setStar, id, handleAtualizar }: RatingInputProps) => {
   const [rating, setRating] = useState(0);  // Armazena o valor da avaliação
   const [hover, setHover] = useState(0);    // Armazena a estrela que o usuário está passando o mouse
 
   const handleRating = (value: number) => {
+    fetch('api/list/rating', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ rating: value, id: id }),
+    }).then((response) => {
+      if (response.ok) {
+        console.log('Success');
+        handleAtualizar();
+      }
+    }).catch((error) => {
+      console.error('Error:', error);
+    });
     setRating(value);
     setPopoverOpen(false);
     setStar(true);
@@ -104,7 +118,7 @@ const RatingInput = ({ totalStars = 5, setPopoverOpen, setStar }: RatingInputPro
                 }`}
               onMouseEnter={() => setHover(ratingValue)}
               onMouseLeave={() => setHover(0)}
-              onClick={() => handleRating(ratingValue)}
+              // onClick={() => handleRating(ratingValue)}
               width={30}
               height={30}
             />
