@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Icon } from '@iconify/react';
 import { IDetectedBarcode, Scanner, } from '@yudiel/react-qr-scanner';
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 type Props = {};
 
@@ -11,6 +13,8 @@ type Props = {};
 export default function LinkScanView({ }: Props) {
 
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
+
+  const [code, setCode] = React.useState<string>("");
 
   const router = useRouter();
 
@@ -63,7 +67,8 @@ export default function LinkScanView({ }: Props) {
 
   const handleScan = (data: IDetectedBarcode[]) => {
     if (data) {
-      linkList(data[0].rawValue ? data[0].rawValue : null);
+      setCode(data[0].rawValue ? data[0].rawValue : "");
+      linkList(data[0].rawValue ? data[0].rawValue : "");
     }
   };
 
@@ -72,7 +77,7 @@ export default function LinkScanView({ }: Props) {
   };
 
   return (
-    <div className="flex sm:w-[90%] w-full gap-8 flex-col justify-center">
+    <div className="flex sm:w-[90%] w-full gap-8 flex-col justify-center px-4">
       {/* QR code scanner */}
       <div style={{
         width: '100%',
@@ -93,8 +98,20 @@ export default function LinkScanView({ }: Props) {
           />
         </div>
       </div>
+      {/* input */}
+      <div className="flex flex-col gap-2 px-4 justify-center items-center">
+        <Label htmlFor="code" className="text-text text-md">Or paste the code here</Label>
+        <Input type="text" className=" bg-background justify-center items-center text-text" value={code} onChange={(e) => setCode(e.target.value)} />
+      </div>
       {/* Buttons */}
       <div className="flex justify-between">
+        <Button className="rounded-full gap-2" size="xl" variant="outline"
+          onClick={() => {
+            linkList(code);
+          }}
+        >
+          <Icon icon="carbon:link" />Link
+        </Button>
         <Button className="rounded-full gap-2" size="xl" variant="outline"
           onClick={() => {
             router.back();

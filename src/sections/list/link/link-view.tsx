@@ -7,6 +7,7 @@ import QRCode from "react-qr-code";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Props = {
   list: List | null;
@@ -16,6 +17,8 @@ type Props = {
 export default function ListLinkView({ list, master }: Props) {
 
   const [name, setName] = React.useState<string>("");
+
+  const [copySuccess, setCopySuccess] = React.useState(false);
 
   const router = useRouter();
 
@@ -48,6 +51,15 @@ export default function ListLinkView({ list, master }: Props) {
     });
   }
 
+  React.useEffect(() => {
+    if (copySuccess) {
+      const timer = setTimeout(() => {
+        setCopySuccess(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [copySuccess]);
+
   return (
     <div className="flex sm:w-[90%] w-full gap-8 flex-col justify-center">
       {/* title */}
@@ -68,6 +80,30 @@ export default function ListLinkView({ list, master }: Props) {
       <div className="flex w-full justify-center">
         <QRCode value={list?.id || ""} bgColor="#1D1C22" fgColor="#fff" />
       </div>
+      {/* code  copy paste */}
+      <div className="flex flex-col items-center gap-4">
+        <p className="text-center text-text text-lg">Or copy this code and paste it in the app</p>
+        <div className="flex gap-4 justify-center items-center cursor-copy"
+          onClick={() => {
+            navigator.clipboard.writeText(list?.id || "");
+            setCopySuccess(true);
+          }}
+        >
+          <p className="text-center text-primary text-2xl font-bold">{list?.id}</p> <Icon icon="streamline:copy-paste" className="text-primary text-3xl" />
+        </div>
+      </div>
+      <Alert
+        variant="success"
+        className="flex gap-4 text-center items-center justify-center rounded-full"
+        active={copySuccess}
+      >
+        <AlertTitle>
+          <Icon icon="streamline:copy-paste" className="text-success text-xl" />
+        </AlertTitle>
+        <AlertDescription>
+          Copied !
+        </AlertDescription>
+      </Alert>
       {/* btns */}
       <div className="flex justify-between">
         {!master ?
