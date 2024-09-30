@@ -102,10 +102,10 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
             className="text-text-tertiary border-[3px] sm:h-8 sm:w-8 h-6 w-6 rounded-[4px]"
           />
           {/* Truncate aplicado aqui */}
-          <span className="text-text font-semibold sm:text-2xl text-md truncate w-[100%] ">
+          <span className="text-text font-semibold truncate w-[100%] ">
             <Input
               value={name}
-              className="w-full border-0"
+              className="w-full border-0 sm:text-2xl text-md "
               onChange={(e) => {
                 setName(e.target.value);
               }}
