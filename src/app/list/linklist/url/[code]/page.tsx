@@ -4,6 +4,7 @@ import prisma from "@/lib/db";
 import { validarToken } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import LinkCodeView from "@/sections/list/link/url/scan-view";
 
 export default async function Home({ params: { code } }: { params: { code: string } }) {
 
@@ -13,6 +14,13 @@ export default async function Home({ params: { code } }: { params: { code: strin
 
   // Validar o token
   const validToken = await validarToken(token);
+
+  console.log(token);
+
+  if (!token) {
+    // tela de criação de usuário
+    return <LinkCodeView token={validToken.token} code={code} />;
+  }
 
   // Verifica se o token é válido
   if (!validToken) {

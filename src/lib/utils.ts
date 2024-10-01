@@ -138,14 +138,6 @@ export const validarToken = async (
         process.env.JWT_SECRET as string // Chave secreta
         // { expiresIn: "1h" } // Expiração de 1 hora
       );
-
-      const host = process.env.NEXT_PUBLIC_HOST || "http://localhost:3000"; // Certifique-se de ter o host definido
-
-      await fetch(`${host}/api/set-token`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: token }),
-      });
     }
   }
 
