@@ -140,7 +140,7 @@ export default function ListLinkView({ list, master }: Props) {
         </Link>
       </div>
       {/* User list */}
-      <div className="flex flex-col gap-4 w-full">
+      {master && <div className="flex flex-col gap-4 w-full">
         <h2 className="text-2xl text-center text-text font-bold">Users</h2>
         <div className="flex flex-col gap-4">
           {list?.users.map((user) => {
@@ -157,7 +157,7 @@ export default function ListLinkView({ list, master }: Props) {
             );
           })}
         </div>
-      </div>
+      </div>}
     </div >
   );
 }
