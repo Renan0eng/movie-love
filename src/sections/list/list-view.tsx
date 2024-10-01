@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Icon } from '@iconify/react';
 import { ListItem as ListItemType, Prisma, Rating } from "@prisma/client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 export type ListItemTypeWithRating = Prisma.ListItemGetPayload<{
@@ -16,11 +17,41 @@ export type ListItemTypeWithRating = Prisma.ListItemGetPayload<{
 
 type Props = {
   films: ListItemTypeWithRating[]
+  token: string
 }
 
 export default function ListView({
-  films
+  films,
+  token
 }: Props) {
+
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (!token) {
+      router.refresh();
+    }
+    console.log(token);
+    fetch('/api/set-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: token,
+      }),
+    })
+      .then(response => response.json())
+      .then(() => {
+        console.log('Success');
+        router.refresh();
+
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        console.log('Error:', error);
+      });
+  }, [token]);
 
   const [page, setPage] = React.useState(1)
 

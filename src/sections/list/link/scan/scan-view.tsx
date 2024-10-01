@@ -49,25 +49,7 @@ export default function LinkScanView({ }: Props) {
   }, []);
 
   const linkList = (code: string | null | undefined) => {
-    fetch('/api/list/linklist', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        code: code,
-      }),
-    })
-      .then(response => response.json())
-      .then(() => {
-        router.push('/list');
-        console.log('Success');
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        console.log('Error:', error);
-        setError('QR code not valid');
-      });
+    router.push(`/list/linklist/url/${code}`);
   }
 
   React.useEffect(() => {
@@ -106,6 +88,7 @@ export default function LinkScanView({ }: Props) {
           height: '300px',
         }}>
           <Scanner
+            scanDelay={500}
             onScan={handleScan}
             onError={handleError}
           />

@@ -43,7 +43,12 @@ export default function LinkCodeView({ token, code }: Props) {
 
   return (
     <div>
-      <h1>LinkCodeView</h1>
+      {/* loader link code */}
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-2xl font-bold text-text">
+          Connecting to the list...
+        </p>
+      </div>
     </div>
   );
 }
