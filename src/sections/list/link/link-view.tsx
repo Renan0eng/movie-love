@@ -8,9 +8,10 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { usePathname, useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ListItemTypeWithUser } from "@/app/list/linklist/page";
 
 type Props = {
-  list: List | null;
+  list: ListItemTypeWithUser | null;
   master: boolean;
 };
 
@@ -42,15 +43,14 @@ export default function ListLinkView({ list, master }: Props) {
     });
   };
 
-  const handleUnConnect = () => {
+  const handleUnConnect = (id: string) => {
     fetch('/api/list/unconnect', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: list?.id }),
+      body: JSON.stringify({ id: id }),
     }).then(() => {
-      router.push('/list');
       console.log('unconnected');
     });
   }
@@ -128,13 +128,35 @@ export default function ListLinkView({ list, master }: Props) {
       {/* btns */}
       <div className="flex justify-between">
         {!master ?
-          <Button className="rounded-full gap-2" size="xl" variant="outline" onClick={handleUnConnect}><Icon icon="mingcute:unlink-fill" />Unconnect</Button> :
+          <Button className="rounded-full gap-2" size="xl" variant="outline" onClick={() => {
+            handleUnConnect(list?.id || "")
+            router.push('/list');
+          }}><Icon icon="mingcute:unlink-fill" />Unconnect</Button> :
           <Link href="/list/linklist/scan">
             <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:scan-alt" />Scan</Button>
           </Link>}
         <Link href="/list">
           <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:arrow-left" />Back</Button>
         </Link>
+      </div>
+      {/* User list */}
+      <div className="flex flex-col gap-4 w-full">
+        <h2 className="text-2xl text-center text-text font-bold">Users</h2>
+        <div className="flex flex-col gap-4">
+          {list?.users.map((user) => {
+            return (
+              <div key={user.id} className="flex gap-4 justify-center items-center">
+                <Icon icon="ic:outline-people" className="text-3xl text-primary" />
+                <p className="text-lg text-text">{user.id}</p>
+                <p className="text-lg text-text">-</p>
+                <p className="text-lg text-text">{user.name}</p>
+                <Button className="rounded-full gap-2" size="icon-xl" variant="outline" onClick={() => handleUnConnect(user.id)}>
+                  <Icon icon="mdi:trash-outline" className="text-3xl text-primary" />
+                </Button>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div >
   );

@@ -4,7 +4,19 @@ import ListLinkView from "@/sections/list/link/link-view";
 import prisma from "@/lib/db";
 import { validarToken } from "@/lib/utils";
 import { cookies } from "next/headers";
+import { Prisma } from "@prisma/client";
 
+// export type ListItemTypeWithRating = Prisma.ListItemGetPayload<{
+//   include: {
+//     rating: true
+//   }
+// }>
+
+export type ListItemTypeWithUser = Prisma.ListGetPayload<{
+  include: {
+    users: true
+  }
+}>
 
 export default async function Home() {
 
@@ -22,6 +34,9 @@ export default async function Home() {
           id: userId || "",
         },
       },
+    },
+    include: {
+      users: true,
     },
   });
 
