@@ -1,6 +1,7 @@
 import Logo from "@/components/home/logo";
 import { ListItem } from "@/components/home/nav-item";
 import { Button } from "@/components/ui/button";
+import AuthButton from "@/components/auth/auth-button";
 
 export default function HomeLayout({
   children,
@@ -38,7 +39,7 @@ export default function HomeLayout({
                   <ListItem key={item.name} item={item} />
                 ))}
           </ul>
-          <Button className="rounded-full " size="lg" variant="default">Sign in</Button>
+          <AuthButton />
         </div>
       </div>
       {children}
