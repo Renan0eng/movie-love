@@ -9,16 +9,14 @@ export default function AuthButton() {
   if (session) {
     return (
       <div>
-        <p>Bem-vindo, {session.user?.name}!</p>
         {/* <button onClick={() => signOut()}>Sair</button> */}
-        <Button className="rounded-full " size="lg" variant="default" onClick={() => signOut()}>Sign in</Button>
+        <Button className="rounded-full " size="lg" variant="default" onClick={() => signOut()}>Sign out</Button>
       </div>
     );
   }
 
   return (
     <div>
-      <p>Você não está logado.</p>
       {/* <button onClick={() => signIn("google")}>Entrar com Google</button> */}
       <Button className="rounded-full " size="lg" variant="default" onClick={() => signIn("google")}>Sign in</Button>
     </div>
