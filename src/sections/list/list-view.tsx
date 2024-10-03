@@ -1,28 +1,34 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { ListItem } from "@/components/list/list-item";
 import { ListPagination } from "@/components/list/list-pagination";
 import { Button } from "@/components/ui/button";
 import { Icon } from '@iconify/react';
-import { ListItem as ListItemType, Prisma, Rating } from "@prisma/client";
+import { ListItem as ListItemType, Prisma, Rating, User } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 
 export type ListItemTypeWithRating = Prisma.ListItemGetPayload<{
   include: {
-    rating: true
+    rating: {
+      include: {
+        user: true
+      }
+    }
   }
 }>
 
 type Props = {
   films: ListItemTypeWithRating[]
   token: string
+  user: User | null
 }
 
 export default function ListView({
   films,
-  token
+  token,
+  user
 }: Props) {
 
   const router = useRouter();
@@ -93,6 +99,7 @@ export default function ListView({
     });
   }
 
+
   return (
     <div className="flex sm:w-[90%] w-full gap-8 justify-around flex-col">
       <div className="flex w-full rounded-xl shadow-xl bg-background-shadow flex-col sm:p-8 p-[4px] sm:gap-8 gap-2 py-3" >
@@ -117,7 +124,7 @@ export default function ListView({
               .slice((page - 1) * 10, page * 10)
               .map((item) => {
                 return (
-                  <ListItem key={item.id} item={item} handleAtualizar={handleAtualizar} />
+                  <ListItem key={item.id} item={item} handleAtualizar={handleAtualizar} user={user} />
                 )
               })
           }

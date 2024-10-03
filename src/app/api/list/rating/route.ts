@@ -1,6 +1,7 @@
 import prisma from "../../../../lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { validarToken } from "@/lib/utils";
 
 // Tipagem para o payload do JWT
 interface JwtPayload {
@@ -9,40 +10,11 @@ interface JwtPayload {
 
 export const POST = async (req: NextRequest) => {
   // Obter o JWT do cabeçalho do cookie token
-  let token = req.cookies.get("token")?.value;
+  let tokenCookie = req.cookies.get("token")?.value;
 
-  console.log("token:", token);
+  console.log("tokenCookie:", tokenCookie);
 
-  let userId: string | null = null;
-
-  if (!token) {
-    // Se não houver token, cria um novo usuário e gera um novo JWT
-    userId = await criarNovoUsuario();
-
-    token = jwt.sign(
-      { id: userId }, // Payload do JWT
-      process.env.JWT_SECRET as string // Chave secreta usada para assinar o token
-      // { expiresIn: "1h" } // O token expira em 1 hora
-    );
-  } else {
-    try {
-      // Verifica se o token é válido
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET as string
-      ) as JwtPayload;
-      userId = decoded.id;
-    } catch (err) {
-      // Se o token for inválido, cria um novo
-      userId = await criarNovoUsuario();
-
-      token = jwt.sign(
-        { id: userId }, // Payload
-        process.env.JWT_SECRET as string // Chave secreta
-        // { expiresIn: "1h" } // Expiração de 1 hora
-      );
-    }
-  }
+  const { userId, token } = await validarToken(tokenCookie);
 
   // cria uma nota para o filme
 
@@ -102,4 +74,37 @@ const criarNovoUsuario = async (): Promise<string> => {
     },
   });
   return newUser.id; // Retorna o ID do novo usuário
+};
+
+export const DELETE = async (req: NextRequest) => {
+  try {
+    // Extrai o ID da URL
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id"); // Supondo que o ID venha na query string
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "ID não fornecido" },
+        { status: 400 }
+      );
+    }
+
+    console.log("ID:", id);
+
+    // Deleta o registro no banco de dados
+    await prisma.rating.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    // Retorna a resposta de sucesso
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Erro ao deletar rating:", error);
+    return NextResponse.json(
+      { success: false, message: "Erro interno do servidor" },
+      { status: 500 }
+    );
+  }
 };

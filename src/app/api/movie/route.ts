@@ -172,7 +172,11 @@ export const GET = async (req: NextRequest) => {
       createdAt: "asc",
     },
     include: {
-      rating: true,
+      rating: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 

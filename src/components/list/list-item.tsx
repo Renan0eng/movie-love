@@ -3,20 +3,20 @@ import * as React from "react";
 import Image from "next/image";
 import { Checkbox } from "../ui/checkbox";
 import { PopoverStar } from "./popover-nota";
-import { ListItem as ListItemType } from "@prisma/client";
+import { ListItem as ListItemType, User } from "@prisma/client";
 import { Input } from "../ui/input";
 import { ListItemTypeWithRating } from "@/sections/list/list-view";
 
 export interface Props extends React.HTMLAttributes<HTMLLIElement> {
   item: ListItemTypeWithRating;
   handleAtualizar: () => void;
+  user: User | null;
 }
 
 const ListItem = React.forwardRef<HTMLDataListElement, Props>(
-  ({ className, item, handleAtualizar, ...props }, ref) => {
+  ({ className, item, handleAtualizar, user, ...props }, ref) => {
     const [checked, setChecked] = React.useState(item.activi);
     const [name, setName] = React.useState(item.name);
-    const [star, setStar] = React.useState(true);
 
     React.useEffect(() => {
       setChecked(item.activi);
@@ -114,27 +114,29 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
           </span>
         </div>
         <div className="flex flex-row sm:gap-6 gap-1 items-center">
-          <div className="flex flex-row sm:gap-3 gap-2 items-center">
-            <span className="text-text-secondary sm:text-md text-sm">{item.rating[0]?.rating}</span>
-            <div className="flex sm:w-[65px] w-[48px] relative">
-              <Image
-                src="/Avatar.png"
-                height={40}
-                width={40}
-                className="rounded-full border-primary border-2 w-8 sm:w-10 h-8 sm:h-10 absolute sm:left-[25px] right-0 bg-background"
-                alt=""
-              />
-              <Image
-                src="/Avatar.png"
-                height={40}
-                width={40}
-                className="rounded-full border-primary border-2 w-8 sm:w-10 h-8 sm:h-10 bg-background"
-                alt=""
-              />
-            </div>
-            <span className="text-text-secondary sm:text-md text-sm">{item.rating[1]?.rating}</span>
-          </div>
-          <PopoverStar star={star} setStar={setStar} id={item.id} handleAtualizar={handleAtualizar} />
+          {item.rating.length > 0 &&
+            <div className="flex flex-row sm:gap-3 gap-2 items-center">
+              {item.rating[0]?.rating && <span className="text-text-secondary sm:text-md text-sm">{item.rating[0]?.rating}</span>}
+              <div className="flex sm:w-[65px] w-[48px] relative">
+                {item.rating[1]?.rating && <img
+                  src={item.rating[1]?.user?.image || "/Avatar.png"}
+                  height={40}
+                  width={40}
+                  className="rounded-full border-primary border-2 w-8 sm:w-10 h-8 sm:h-10 absolute sm:left-[25px] right-0 bg-background"
+                  alt=""
+                />}
+                {item.rating[0]?.rating && <img
+                  src={item.rating[0]?.user?.image || "/Avatar.png"}
+                  height={40}
+                  width={40}
+                  className="rounded-full border-primary border-2 w-8 sm:w-10 h-8 sm:h-10 bg-background"
+                  alt=""
+                />}
+              </div>
+              {/* <span className="text-text-secondary sm:text-md text-sm">{item.rating[1]?.rating}</span> */}
+              {item.rating[1]?.rating && <span className="text-text-secondary sm:text-md text-sm">{item.rating[1]?.rating}</span>}
+            </div>}
+          <PopoverStar item={item.rating.filter(rating => rating.userId === user?.id)[0]} id={item.id} handleAtualizar={handleAtualizar} value={item.rating.filter(rating => rating.userId === user?.id)[0]?.rating} />
         </div>
       </div>
     );

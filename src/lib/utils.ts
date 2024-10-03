@@ -88,7 +88,11 @@ export const getLista = async (
       createdAt: "asc",
     },
     include: {
-      rating: true,
+      rating: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 
