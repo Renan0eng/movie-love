@@ -115,8 +115,8 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
         </div>
         <div className="flex flex-row sm:gap-6 gap-1 items-center">
           {item.rating.length > 0 &&
-            <div className="flex flex-row sm:gap-3 gap-2 items-center">
-              {item.rating[0]?.rating && <span className="text-text-secondary sm:text-md text-sm">{item.rating[0]?.rating}</span>}
+            <div className="flex flex-row sm:gap-3 gap-1 items-center">
+              {item.rating[0]?.rating && <span className="text-primary sm:text-md text-sm font-bold">{item.rating[0]?.rating}</span>}
               <div className="flex sm:w-[65px] w-[48px] relative">
                 {item.rating[1]?.rating && <img
                   src={item.rating[1]?.user?.image || "/Avatar.png"}
