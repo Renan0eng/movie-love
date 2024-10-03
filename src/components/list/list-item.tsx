@@ -134,7 +134,7 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
                 />}
               </div>
               {/* <span className="text-text-secondary sm:text-md text-sm">{item.rating[1]?.rating}</span> */}
-              {item.rating[1]?.rating && <span className="text-text-secondary sm:text-md text-sm">{item.rating[1]?.rating}</span>}
+              {item.rating[1]?.rating && <span className="text-primary sm:text-md text-sm font-bold">{item.rating[1]?.rating}</span>}
             </div>}
           <PopoverStar item={item.rating.filter(rating => rating.userId === user?.id)[0]} id={item.id} handleAtualizar={handleAtualizar} value={item.rating.filter(rating => rating.userId === user?.id)[0]?.rating} />
         </div>
