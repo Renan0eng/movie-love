@@ -1,0 +1,6 @@
+[{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : { "namespace": "android_app", "package_name": "com.renannardi.dev.twa",
+                     "sha256_cert_fingerprints": ["D9:60:D7:25:74:DC:10:B7:AE:D1:0B:02:4A:4C:AB:8D:60:34:64:46:72:C0:6E:6A:75:99:81:70:89:11:AD:21"] }
+      }
+]
