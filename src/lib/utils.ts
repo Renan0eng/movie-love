@@ -107,7 +107,7 @@ export const criarNovoUsuario = async (): Promise<string> => {
 export const validarToken = async (
   token: string | null | undefined
 ): Promise<{
-  userId: string | null;
+  userId: string;
   token: string;
 }> => {
   let userId: string | null = null;

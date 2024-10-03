@@ -12,6 +12,8 @@ export default async function Home({ params: { code } }: { params: { code: strin
   const cookieStore = cookies();
   let token = cookieStore.get('token')?.value;
 
+  console.log("token:", token);
+
   // Validar o token
   const validToken = await validarToken(token);
 
