@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "com.renannardi.movie.twa",
-        "sha256_cert_fingerprints": ["3F:7E:77:CB:FB:13:02:EF:1D:06:37:F3:2A:4B:8A:6D:C2:E3:A0:4F:CD:BC:75:DB:AF:30:17:44:61:8F:01:08"]
+        "sha256_cert_fingerprints": ["DE:68:A1:1B:81:2B:7A:10:4E:EA:3D:4E:26:47:1A:AB:2D:37:3F:24:89:06:38:4D:E5:27:22:02:F7:C0:A8:D0"]
       }
     }]
