@@ -19,6 +19,14 @@ export const POST = async (req: NextRequest) => {
     console.log("idUser", idUser);
     console.log("id", id);
 
+    // deleta os ranks do usuario na lista
+
+    await prisma.rating.deleteMany({
+      where: {
+        userId: idUser,
+      },
+    });
+
     await prisma.user.update({
       where: {
         id: idUser,
@@ -31,6 +39,8 @@ export const POST = async (req: NextRequest) => {
         },
       },
     });
+
+    //
 
     const response = NextResponse.json({ success: true });
 
