@@ -1,6 +1,8 @@
 [{
-        "relation": ["delegate_permission/common.handle_all_urls"],
-        "target" : { "namespace": "android_app", "package_name": "com.renannardi.dev.twa",
-                     "sha256_cert_fingerprints": ["D9:60:D7:25:74:DC:10:B7:AE:D1:0B:02:4A:4C:AB:8D:60:34:64:46:72:C0:6E:6A:75:99:81:70:89:11:AD:21"] }
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.renannardi.movie.twa",
+        "sha256_cert_fingerprints": ["3F:7E:77:CB:FB:13:02:EF:1D:06:37:F3:2A:4B:8A:6D:C2:E3:A0:4F:CD:BC:75:DB:AF:30:17:44:61:8F:01:08"]
       }
-]
+    }]
