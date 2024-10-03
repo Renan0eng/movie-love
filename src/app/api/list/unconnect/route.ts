@@ -13,7 +13,29 @@ export const POST = async (req: NextRequest) => {
 
   console.log("userId", userId);
 
-  const { id }: { id: string } = await req.json();
+  const { id, idUser }: { id: string; idUser: string } = await req.json();
+
+  if (idUser) {
+    console.log("idUser", idUser);
+    console.log("id", id);
+
+    await prisma.user.update({
+      where: {
+        id: idUser,
+      },
+      data: {
+        lists: {
+          disconnect: {
+            id: id,
+          },
+        },
+      },
+    });
+
+    const response = NextResponse.json({ success: true });
+
+    return response;
+  }
 
   // deleta os ranks do usuario na lista
 

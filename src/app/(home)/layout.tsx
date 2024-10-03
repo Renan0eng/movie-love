@@ -4,6 +4,7 @@ import AuthButton from "@/components/auth/auth-button";
 import { cookies } from "next/headers";
 import { validarToken } from "@/lib/utils";
 import prisma from "@/lib/db";
+import { User } from "@prisma/client";
 
 export default async function HomeLayout({
   children,
@@ -21,7 +22,7 @@ export default async function HomeLayout({
     where: {
       id: userId,
     },
-  })
+  }) as User;
 
 
   return (

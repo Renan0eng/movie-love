@@ -6,7 +6,7 @@ import { List } from "@prisma/client";
 import QRCode from "react-qr-code";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ListItemTypeWithUser } from "@/app/list/linklist/page";
 
@@ -15,9 +15,15 @@ type Props = {
   master: boolean;
 };
 
-export default function ListLinkView({ list, master }: Props) {
+export default function ListLinkView(props: Props) {
 
-  const pathName = usePathname();
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const [focused, setFocused] = React.useState(false);
+
+  const [list, setList] = React.useState<ListItemTypeWithUser | null>(props.list);
+
+  const [master, setMaster] = React.useState<boolean>(props.master);
 
   const [name, setName] = React.useState<string>("");
 
@@ -28,10 +34,13 @@ export default function ListLinkView({ list, master }: Props) {
   const router = useRouter();
 
   React.useEffect(() => {
-    setName(list?.name || "");
+    if (!focused) {
+      setName(list?.name || "");
+    }
   }, [list]);
 
   const handleNameEdit = () => {
+    setFocused(false);
     fetch('/api/list/name', {
       method: 'POST',
       headers: {
@@ -43,15 +52,39 @@ export default function ListLinkView({ list, master }: Props) {
     });
   };
 
-  const handleUnConnect = (id: string) => {
+  const handleUnConnect = (id: string, idUser: string | null = null) => {
     fetch('/api/list/unconnect', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: id }),
+      body: JSON.stringify(idUser ? {
+        id: id,
+        idUser: idUser,
+      } : { id: id }),
     }).then(() => {
       console.log('unconnected');
+      if (idUser) {
+        handleUpdateData();
+      }
+    });
+  }
+
+  React.useEffect(() => {
+    // Busca a lista a cada 5 segundos
+    const interval = setInterval(() => {
+      handleUpdateData();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleUpdateData = () => {
+    fetch('/api/list/linklist').then((JSON) => {
+      return JSON.json();
+    }).then((data) => {
+      console.log("data", data);
+      setList(data.list);
+      setMaster(data.master);
     });
   }
 
@@ -72,11 +105,18 @@ export default function ListLinkView({ list, master }: Props) {
       {master ?
         <div className="flex justify-center items-center">
           <Input
+            ref={inputRef}
             className="border-0 text-2xl text-primary text-center font-bold w-100 rounded-full"
             placeholder="List name"
             value={name || ""}
             onChange={(e) => setName(e.target.value)}
+            onFocus={() => setFocused(true)}
             onBlur={handleNameEdit}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                inputRef.current?.blur();
+              }
+            }}
           />
         </div>
         : <h2 className="text-2xl text-center text-primary font-bold">{name}</h2>}
@@ -127,14 +167,15 @@ export default function ListLinkView({ list, master }: Props) {
       </Alert>
       {/* btns */}
       <div className="flex justify-between">
-        {!master ?
-          <Button className="rounded-full gap-2" size="xl" variant="outline" onClick={() => {
-            handleUnConnect(list?.id || "")
-            router.push('/list');
-          }}><Icon icon="mingcute:unlink-fill" />Unconnect</Button> :
+        {master ?
           <Link href="/list/linklist/scan">
             <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:scan-alt" />Scan</Button>
-          </Link>}
+          </Link>
+          : <Button className="rounded-full gap-2" size="xl" variant="outline" onClick={() => {
+            handleUnConnect(list?.id || "")
+            router.push('/list');
+          }}><Icon icon="mingcute:unlink-fill" />Unconnect</Button>
+        }
         <Link href="/list">
           <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="carbon:arrow-left" />Back</Button>
         </Link>
@@ -145,12 +186,12 @@ export default function ListLinkView({ list, master }: Props) {
         <div className="flex flex-col gap-4">
           {list?.users.map((user) => {
             return (
-              <div key={user.id} className="flex gap-4 justify-center items-center">
+              <div key={user.id} className="flex sm:gap-4   justify-center items-center">
                 <Icon icon="ic:outline-people" className="text-3xl text-primary" />
-                <p className="text-lg text-text">{user.id}</p>
+                <p className="text-lg text-text">{user.email ? user.email : user.id}</p>
                 <p className="text-lg text-text">-</p>
                 <p className="text-lg text-text">{user.name}</p>
-                <Button className="rounded-full gap-2" size="icon-xl" variant="outline" onClick={() => handleUnConnect(user.id)}>
+                <Button className="rounded-full gap-2" size="icon-xl" variant="outline" onClick={() => handleUnConnect(list?.id, user.id)}>
                   <Icon icon="mdi:trash-outline" className="text-3xl text-primary" />
                 </Button>
               </div>

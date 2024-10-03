@@ -1,6 +1,8 @@
 import prisma from "../../../../lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { validarToken } from "@/lib/utils";
+import { list } from "postcss";
 
 // Tipagem para o payload do JWT
 interface JwtPayload {
@@ -115,4 +117,45 @@ const criarNovoUsuario = async (): Promise<string> => {
     },
   });
   return newUser.id; // Retorna o ID do novo usuário
+};
+
+export const GET = async (req: NextRequest) => {
+  let master = false;
+
+  let token = req.cookies.get("token")?.value;
+
+  const userId = (await validarToken(token)).userId;
+
+  const lista = await prisma.list.findFirst({
+    where: {
+      users: {
+        some: {
+          id: userId || "",
+        },
+      },
+    },
+    include: {
+      users: {
+        where: {
+          id: {
+            not: userId,
+          },
+        },
+      },
+    },
+  });
+
+  lista?.users.forEach((user) => {
+    if (user.id === userId) {
+      master = true;
+    }
+  });
+
+  if (lista?.masterId === userId) {
+    master = true;
+  }
+
+  lista?.users.filter((user) => user.id !== userId);
+
+  return NextResponse.json({ list: lista, master });
 };

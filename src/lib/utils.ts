@@ -112,6 +112,8 @@ export const validarToken = async (
 }> => {
   let userId: string | null = null;
 
+  console.log("token:", token);
+
   if (!token) {
     // Se não houver token, cria um novo usuário e gera um novo JWT
     userId = await criarNovoUsuario();
