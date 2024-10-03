@@ -95,7 +95,7 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
 
     return (
       <div className="bg-background/70 w-full rounded-xl sm:p-6 p-3 flex justify-between shadow-lg hover:bg-slate-700">
-        <div className="flex sm:gap-8 gap-4 items-center sm:w-[calc(100%-200px)] w-[calc(100%-140px)]">
+        <div className="flex sm:gap-4 items-center sm:w-[calc(100%-200px)] w-full">
           <Checkbox
             onCheckedChange={handleChecked}
             checked={checked} // Sincronizado com o estado
@@ -105,7 +105,7 @@ const ListItem = React.forwardRef<HTMLDataListElement, Props>(
           <span className="text-text font-semibold truncate w-[100%] ">
             <Input
               value={name}
-              className="w-full border-0 sm:text-2xl text-md "
+              className="w-full border-0 sm:text-2xl text-md px-1"
               onChange={(e) => {
                 setName(e.target.value);
               }}
