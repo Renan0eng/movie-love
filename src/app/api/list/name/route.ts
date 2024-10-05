@@ -15,8 +15,6 @@ export const POST = async (req: NextRequest) => {
 
   const userId = (await validarToken(token)).userId as string;
 
-  console.log("userId", userId);
-
   const { name }: { name: string } = await req.json();
 
   await prisma.list.updateMany({

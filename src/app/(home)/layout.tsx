@@ -14,8 +14,6 @@ export default async function HomeLayout({
 
   const token = cookies().get('token')?.value;
 
-  console.log("token:", token);
-
   const userId = (await validarToken(token)).userId;
 
   const user = await prisma.user.findFirst({

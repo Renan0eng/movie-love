@@ -48,7 +48,6 @@ export default function ListLinkView(props: Props) {
       },
       body: JSON.stringify({ id: list?.id, name }),
     }).then(() => {
-      console.log('name updated');
     });
   };
 
@@ -63,7 +62,6 @@ export default function ListLinkView(props: Props) {
         idUser: idUser,
       } : { id: id }),
     }).then(() => {
-      console.log('unconnected');
       if (idUser) {
         handleUpdateData();
       }
@@ -82,7 +80,6 @@ export default function ListLinkView(props: Props) {
     fetch('/api/list/linklist').then((JSON) => {
       return JSON.json();
     }).then((data) => {
-      console.log("data", data);
       setList(data.list);
       setMaster(data.master);
     });

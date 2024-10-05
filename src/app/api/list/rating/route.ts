@@ -12,8 +12,6 @@ export const POST = async (req: NextRequest) => {
   // Obter o JWT do cabeçalho do cookie token
   let tokenCookie = req.cookies.get("token")?.value;
 
-  console.log("tokenCookie:", tokenCookie);
-
   const { userId, token } = await validarToken(tokenCookie);
 
   // cria uma nota para o filme
@@ -88,8 +86,6 @@ export const DELETE = async (req: NextRequest) => {
         { status: 400 }
       );
     }
-
-    console.log("ID:", id);
 
     // Deleta o registro no banco de dados
     await prisma.rating.delete({

@@ -17,7 +17,6 @@ export default function LinkCodeView({ token, code }: Props) {
     if (!token) {
       router.refresh();
     }
-    console.log(token);
     fetch('/api/set-token', {
       method: 'POST',
       headers: {
@@ -31,8 +30,6 @@ export default function LinkCodeView({ token, code }: Props) {
       .then(() => {
         console.log('Success');
         router.refresh();
-        console.log(`http://localhost:3000/list/linklist/url/${code}`);
-
       })
       .catch((error) => {
         console.error('Error:', error);

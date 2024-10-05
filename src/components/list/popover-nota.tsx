@@ -124,7 +124,6 @@ const RatingInput = ({ totalStars = 5, setPopoverOpen, setStar, id, handleAtuali
   }, [value]);
 
   React.useEffect(() => {
-    console.log("id", id);
   }, [id]);
 
   const handleRating = (ratingValue: number) => {

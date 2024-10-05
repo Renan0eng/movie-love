@@ -12,12 +12,8 @@ export default async function Home({ params: { code } }: { params: { code: strin
   const cookieStore = cookies();
   let token = cookieStore.get('token')?.value;
 
-  console.log("token:", token);
-
   // Validar o token
   const validToken = await validarToken(token);
-
-  console.log(token);
 
   if (!token) {
     // tela de criação de usuário
@@ -26,7 +22,6 @@ export default async function Home({ params: { code } }: { params: { code: strin
 
   // Verifica se o token é válido
   if (!validToken) {
-    console.log("Token inválido");
     redirect(`/`); // Redireciona caso o token seja inválido
   }
 
@@ -34,7 +29,6 @@ export default async function Home({ params: { code } }: { params: { code: strin
 
   // Verificar se o userId está válido
   if (!userId) {
-    console.log("Usuário inválido");
     redirect(`/`);
   }
 

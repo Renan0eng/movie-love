@@ -13,8 +13,6 @@ export const POST = async (req: NextRequest) => {
   // Obter o JWT do cabeçalho do cookie token
   let token = req.cookies.get("token")?.value;
 
-  console.log("token:", token);
-
   let userId: string | null = null;
 
   if (!token) {
@@ -48,8 +46,6 @@ export const POST = async (req: NextRequest) => {
 
   // Remove as listas lincadas ao usuário e deleta elas
 
-  console.log("userId", userId);
-
   const list = await prisma.list.findFirst({
     where: {
       users: {
@@ -82,8 +78,6 @@ export const POST = async (req: NextRequest) => {
 
   // linka a nova lista ao usuário
   const { code } = await req.json();
-
-  console.log("code:", code);
 
   await prisma.user.update({
     where: {

@@ -57,9 +57,10 @@ export const POST = async (req: NextRequest) => {
   if (!lista) {
     lista = await prisma.list.create({
       data: {
+        name: "My List",
         users: {
           connect: {
-            id: userId, // Conecta o usuário à nova lista
+            id: userId,
           },
         },
         masterId: userId,
@@ -147,6 +148,7 @@ export const GET = async (req: NextRequest) => {
   if (!lista) {
     lista = await prisma.list.create({
       data: {
+        name: "My List",
         users: {
           connect: {
             id: userId, // Conecta o usuário à nova lista

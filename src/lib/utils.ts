@@ -63,6 +63,7 @@ export const getLista = async (
   if (!lista) {
     lista = await prisma.list.create({
       data: {
+        name: "My List",
         users: {
           connect: {
             id: userId, // Conecta o usuário à nova lista
@@ -115,8 +116,6 @@ export const validarToken = async (
   token: string;
 }> => {
   let userId: string | null = null;
-
-  console.log("token:", token);
 
   if (!token) {
     // Se não houver token, cria um novo usuário e gera um novo JWT

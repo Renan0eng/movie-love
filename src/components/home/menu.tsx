@@ -13,7 +13,6 @@ type Props = {
 export default function Menu({ user }: Props) {
 
   useEffect(() => {
-    console.log("user", user);
   }, [user]);
 
   return (

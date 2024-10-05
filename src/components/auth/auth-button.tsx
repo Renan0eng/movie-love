@@ -24,7 +24,6 @@ export default function AuthButton({ access_token }: Props) {
   // }, []);
 
   useEffect(() => {
-    console.log("access_token", access_token);
   }, [access_token]);
 
 

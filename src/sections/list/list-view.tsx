@@ -37,7 +37,6 @@ export default function ListView({
     if (!token) {
       router.refresh();
     }
-    console.log(token);
     fetch('/api/set-token', {
       method: 'POST',
       headers: {
@@ -63,7 +62,7 @@ export default function ListView({
 
   const [data, setData] = React.useState(films)
 
-  const [newItemPopover, setNewItemPopover] = React.useState(false)
+  const [newItem, setNewItem] = React.useState(false)
 
   React.useEffect(() => {
     // cria um timer para atualizar a lista a cada 5 segundos
@@ -85,6 +84,26 @@ export default function ListView({
     setData(data);
   };
 
+  useEffect(() => {
+    let maxPages = 0;
+    const length = data.length;
+    if (length > 0) {
+      maxPages = Math.ceil(length / 10);
+    }
+
+    if (maxPages === 0) {
+      maxPages = 1;
+    }
+
+    if (maxPages < page) {
+      setPage(maxPages);
+    }
+    if (newItem) {
+      setPage(maxPages);
+      setNewItem(false);
+    }
+  }, [data]);
+
   const handleAddNew = async () => {
     fetch("/api/movie", {
       method: "POST",
@@ -95,7 +114,19 @@ export default function ListView({
         name: "New Movie",
       }),
     }).then(() => {
+      setNewItem(true);
       handleAtualizar();
+      let maxPages = 0;
+      const length = data.length;
+      if (length > 0) {
+        maxPages = Math.ceil(length / 10);
+      }
+
+      if (maxPages === 0) {
+        maxPages = 1;
+      }
+
+      setPage(maxPages);
     });
   }
 
@@ -131,14 +162,16 @@ export default function ListView({
         </div>
 
         {/* Pagination */}
-        <ListPagination page={page} setPage={setPage} maxPages={(data.length / 10) + 1} />
+        <ListPagination page={page} setPage={setPage} maxPages={data ? ((data.length > 0 ? data.length - 1 : 0) / 10) + 1 : 0} />
       </div>
       {/* btns */}
       <div className="flex justify-between">
         <Link href="/list/linklist">
           <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="mage:qr-code" />Link list</Button>
         </Link>
-        <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="bi:gear" />Personalize</Button>
+        <Link href="/list/personalize">
+          <Button className="rounded-full gap-2" size="xl" variant="outline"><Icon icon="bi:gear" />Personalize</Button>
+        </Link>
       </div>
     </div >
   );

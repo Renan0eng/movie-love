@@ -10,15 +10,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ access_token: false });
   }
   const userId = (await validarToken(token)).userId as string;
-  console.log("userId", userId);
 
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
     },
   });
-
-  console.log("user", user);
 
   if (!user?.access_token) {
     return NextResponse.json({ access_token: false });

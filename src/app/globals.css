@@ -65,3 +65,19 @@
     @apply bg-background text-foreground;
   }
 }
+input[type="range"]{
+  border-radius: 999999px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  appearance: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: #C21B1B;
+  cursor: pointer;
+}

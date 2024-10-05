@@ -24,7 +24,6 @@ export async function GET(request: NextRequest) {
   try {
     // Trocar o código pelo token de acesso
     const { tokens } = await client.getToken(code);
-    console.log("Tokens:", tokens);
 
     client.setCredentials(tokens);
 
@@ -43,7 +42,6 @@ export async function GET(request: NextRequest) {
       email: string;
       access_token: string;
     };
-    console.log("User Info:", user); // Armazenar os dados do usuário conforme necessário
 
     // verifica se o access_token  ja esta lincado a um usuario
 
@@ -67,8 +65,6 @@ export async function GET(request: NextRequest) {
     let jwtToken;
 
     if (validAccess) {
-      console.log("validAccess", validAccess);
-
       await prisma.user.update({
         where: {
           id: validAccess.id,
@@ -124,7 +120,7 @@ export async function GET(request: NextRequest) {
     );
 
     const response = NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/list`
     ); // URL absoluta
 
     response.cookies.set("token", jwtToken, {

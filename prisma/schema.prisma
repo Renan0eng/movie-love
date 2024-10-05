@@ -30,7 +30,10 @@ model User {
 
 model List {
   id        String     @id @default(cuid())
+  autoPlay  Boolean    @default(false)
   name      String?
+  music     String?
+  image     String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   deletedAt DateTime?
