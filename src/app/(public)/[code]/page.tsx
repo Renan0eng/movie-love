@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import prisma from "@/lib/db";
 import PublicView from "@/sections/public/public-view";
+import MusicPlayer from "@/components/personalize/music-player/music-player";
 
 
 export default async function Home({ params: { code } }: { params: { code: string } }) {
@@ -31,6 +32,9 @@ export default async function Home({ params: { code } }: { params: { code: strin
   });
 
   return (
-    <PublicView films={films} />
+    <MusicPlayer url={films?.music} ifAultoPlay={films?.autoPlay}
+      className="fixed bottom-0 w-full z-50 rounded-none bg-background/90 " >
+      <PublicView films={films} code={code} />
+    </MusicPlayer >
   );
 }

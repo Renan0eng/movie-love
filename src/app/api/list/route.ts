@@ -5,6 +5,27 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { validarToken } from "@/lib/utils";
 
+export async function POST(req: NextRequest) {
+  try {
+    // pega o token do usuário
+
+    const { code }: { code: string } = await req.json();
+
+    const data = await prisma.listItem.findFirst({
+      where: {
+        id: code,
+      },
+    });
+
+    return NextResponse.json({ data }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: (error as Error).message },
+      { status: 500 }
+    );
+  }
+}
+
 export async function GET(req: NextRequest) {
   try {
     // pega o token do usuário
