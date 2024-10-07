@@ -31,6 +31,7 @@ model User {
 model List {
   id        String     @id @default(cuid())
   autoPlay  Boolean    @default(false)
+  data      DateTime?
   name      String?
   music     String?
   image     String?

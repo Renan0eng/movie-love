@@ -5,8 +5,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Switch } from "../../ui/switch";
 
 interface MusicPlayerProps {
-  musica?: File | null;
-  url?: string | null;
+  musica?: File | Blob | null;
   className?: string;
   setAutoPlay?: (value: boolean) => void;
   autoPlay?: boolean;
@@ -17,7 +16,6 @@ interface MusicPlayerProps {
 
 const MusicPlayer: React.FC<MusicPlayerProps> = ({
   musica,
-  url,
   className,
   autoPlay,
   setAutoPlay,
@@ -61,6 +59,22 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (audioRef.current && (autoPlay || ifAultoPlay)) {
+      // Verifica se o áudio já está carregado
+      if (audioRef.current.readyState >= 3) {
+        // Se já estiver pronto, inicia a reprodução
+        togglePlayPause();
+      } else {
+        // Caso contrário, define um listener para iniciar após o carregamento
+        audioRef.current.addEventListener("loadedmetadata", () => {
+          togglePlayPause();
+        });
+      }
+    }
+  }, [autoPlay, ifAultoPlay]);
+
+
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const seekTime = (parseFloat(e.target.value) / 100) * duration;
     if (audioRef.current) {
@@ -78,7 +92,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   return (
     <>
       {children}
-      {(url || musica) &&
+      {musica &&
         <div
           className={cn(
             "w-full mx-auto bg-primary/10 text-white p-3 rounded-xl shadow-lg justify-center flex flex-col items-center",
@@ -86,19 +100,13 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
           )}
         >
           <audio
+            autoPlay={autoPlay || ifAultoPlay}
             ref={audioRef}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
             onEnded={() => setIsPlaying(false)}
           >
-            {musica ? (
-              <source src={URL.createObjectURL(musica)} type="audio/mpeg" />
-            ) : url ? (
-              <source
-                src={`${process.env.NEXT_PUBLIC_BASE_URL}/${url}`}
-                type="audio/mpeg"
-              />
-            ) : null}
+            <source src={URL.createObjectURL(musica)} type="audio/mpeg" />
           </audio>
           <div className="text-3xl flex justify-center items-center">
             <Icon

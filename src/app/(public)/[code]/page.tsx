@@ -9,8 +9,6 @@ import MusicPlayer from "@/components/personalize/music-player/music-player";
 
 export default async function Home({ params: { code } }: { params: { code: string } }) {
 
-  console.log(code);
-
   const films = await prisma.list.findFirst({
     where: {
       id: code
@@ -32,9 +30,6 @@ export default async function Home({ params: { code } }: { params: { code: strin
   });
 
   return (
-    <MusicPlayer url={films?.music} ifAultoPlay={films?.autoPlay}
-      className="fixed bottom-0 w-full z-50 rounded-none bg-background/90 " >
-      <PublicView films={films} code={code} />
-    </MusicPlayer >
+    <PublicView films={films} code={code} />
   );
 }

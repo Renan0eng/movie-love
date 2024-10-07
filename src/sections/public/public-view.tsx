@@ -32,6 +32,8 @@ export default function PublicView({ films, code }: Props) {
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState(films?.listItems);
 
+  const [musicaFromDB, setMusicaFromDB] = React.useState<Blob | null>(null);
+
   const [touchStartX, setTouchStartX] = React.useState<number>(0);
   const [touchEndX, setTouchEndX] = React.useState<number>(0);
   const threshold: number = 50; // Distância mínima para considerar como swipe
@@ -87,40 +89,51 @@ export default function PublicView({ films, code }: Props) {
       document.body.style.backgroundPosition = 'center'; // Centraliza a imageFromDBm
       document.body.style.backgroundAttachment = 'fixed'; // Fixa a imagem
     }
+    if (films?.music) {
+      const res = await fetch(`/api/upload?file=${films?.music.replace("uploads/", "")}`);
+      if (res.ok) {
+        const blob = await res.blob();
+        setMusicaFromDB(blob);
+      }
+    }
   };
 
 
   return (
-    <div className="flex sm:w-[90%] w-full gap-8 justify-around flex-col rounded-xl">
-      <div className="flex w-full rounded-xl shadow-xl flex-col sm:p-8 p-[4px] sm:gap-8 gap-2 py-3"
-        style={{
-          backgroundColor: "rgba(30, 30, 30, 0.95)",
-          marginBottom: "150px"
-        }}
-      >
 
-        {/* Header */}
-        <div className="flex justify-center w-full p-2 sm:p-0">
-          <h1 className="text-primary sm:text-4xl text-xl font-semibold text-center">{films?.name}</h1>
-        </div>
-
-        {/* Content */}
-        <div
-          className="flex flex-col gap-2 min-h-96 p-3"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+    <MusicPlayer musica={musicaFromDB} ifAultoPlay={films?.autoPlay}
+      className="fixed bottom-0 w-full z-50 rounded-none bg-background/90 " >
+      <div className="flex sm:w-[90%] w-full gap-8 justify-around flex-col rounded-xl">
+        <div className="flex w-full rounded-xl shadow-xl flex-col sm:p-8 p-[4px] sm:gap-8 gap-2 py-3"
+          style={{
+            backgroundColor: "rgba(30, 30, 30, 0.95)",
+            marginBottom: "150px"
+          }}
         >
-          {data &&
-            data.slice((page - 1) * 10, page * 10).map((item) => (
-              <ListItemPublic key={item.id} item={item} handleAtualizar={handleAtualizar} />
-            ))}
+
+          {/* Header */}
+          <div className="flex justify-center w-full p-2 sm:p-0">
+            <h1 className="text-primary sm:text-4xl text-xl font-semibold text-center">{films?.name}</h1>
+          </div>
+
+          {/* Content */}
+          <div
+            className="flex flex-col gap-2 min-h-96 p-3"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {data &&
+              data.slice((page - 1) * 10, page * 10).map((item) => (
+                <ListItemPublic key={item.id} item={item} handleAtualizar={handleAtualizar} />
+              ))}
+          </div>
+
+          {/* Pagination */}
+          <ListPagination page={page} setPage={setPage} maxPages={data ? ((data.length > 0 ? data.length - 1 : 0) / 10) + 1 : 0} />
         </div>
 
-        {/* Pagination */}
-        <ListPagination page={page} setPage={setPage} maxPages={data ? ((data.length > 0 ? data.length - 1 : 0) / 10) + 1 : 0} />
       </div>
-
-    </div>
+    </MusicPlayer>
   );
 }

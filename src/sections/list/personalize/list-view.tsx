@@ -9,6 +9,7 @@ import { ListItemPublic } from "@/components/personalize/list-item-public";
 import { Input } from "@/components/ui/input";
 import MusicPlayer from "@/components/personalize/music-player/music-player";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { DatePickerDemo } from "@/components/personalize/date-picker/date-picker";
 
 export type ListTypeWithRating = Prisma.ListGetPayload<{
   include: {
@@ -31,17 +32,19 @@ type Props = {
 export default function ListView({ films }: Props) {
   const inputFile = React.useRef<HTMLInputElement>(null);
   const inputImage = React.useRef<HTMLInputElement>(null);
-  const [musica, setMusica] = React.useState<File | null>(null);
+  const [musica, setMusica] = React.useState<Blob | null>(null);
   const [image, setImage] = React.useState<File | null>(null);
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState(films?.listItems);
   const [autoPlay, setAutoPlay] = React.useState(films?.autoPlay);
 
-  const [musicaFromDB, setMusicaFromDB] = React.useState<string | null>(null);
+  const [musicaFromDB, setMusicaFromDB] = React.useState<Blob | null>(null);
   const [imageFromDB, setImageFromDB] = React.useState<string | null>(null);
 
   const [copySuccess, setCopySuccess] = React.useState(false);
   const [copyText, setCopyText] = React.useState("Copy");
+
+  const [date, setDate] = React.useState<Date | undefined>(films?.data ? new Date(films.data) : undefined);
 
   React.useEffect(() => {
     if (copySuccess) {
@@ -55,7 +58,7 @@ export default function ListView({ films }: Props) {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      handleAtualizar();
+      // handleAtualizar();
     }, 5000);
     return () => clearInterval(timer);
   }, []);
@@ -72,9 +75,13 @@ export default function ListView({ films }: Props) {
       setData(data.listItems);
       setAutoPlay(data.autoPlay);
       if (data.music) {
-        setMusicaFromDB(data.music);
+        const res = await fetch(`/api/upload?file=${data?.music.replace("uploads/", "")}`);
+        if (res.ok) {
+          const blob = await res.blob();
+          setMusica(blob);
+        }
       } else {
-        setMusicaFromDB(null);
+        setMusica(null);
       }
       if (data.image) {
         setImageFromDB(data.image);
@@ -112,6 +119,17 @@ export default function ListView({ films }: Props) {
     }
   };
 
+  const handleUpDate = async (e: Date) => {
+    const res = await fetch("/api/personalize/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data: e }),
+    });
+    handleAtualizar();
+  }
+
   useEffect(() => {
     if (musica === null) {
       if (inputFile.current) {
@@ -124,8 +142,7 @@ export default function ListView({ films }: Props) {
     // Define o background do body quando uma imagem é selecionada
     if (image) {
       const imageUrl = URL.createObjectURL(image); // Cria uma URL temporária para a imagem
-      console.log("imageUrl", imageUrl);
-      document.body.style.backgroundImage = `url(${imageUrl})`;
+      document.body.style.backgroundImage = `url(${process.env.NEXT_PUBLIC_BASE_URL}/api/upload?file=${imageUrl.replace("uploads/", "")})`;
       document.body.style.backgroundSize = 'cover'; // Adiciona para cobrir toda a tela
       document.body.style.backgroundPosition = 'center'; // Centraliza a imageFromDBm
     } else {
@@ -147,10 +164,9 @@ export default function ListView({ films }: Props) {
   useEffect(() => {
     // Define o background do body quando uma imagem é selecionada
     if (imageFromDB) {
-      document.body.style.backgroundImage = `url(${process.env.NEXT_PUBLIC_BASE_URL}/${imageFromDB})`;
+      document.body.style.backgroundImage = `url(${process.env.NEXT_PUBLIC_BASE_URL}/api/upload?file=${imageFromDB.replace("uploads/", "")})`;
       document.body.style.backgroundSize = 'cover'; // Adiciona para cobrir toda a tela
       document.body.style.backgroundPosition = 'center'; // Centraliza a imageFromDBm
-      // document.body.style.backgroundRepeat = 'no-repeat'; // Não repete a imageFromDBm
     } else {
       // Limpa o background se não houver imageFromDBm
       document.body.style.backgroundImage = 'none';
@@ -178,10 +194,22 @@ export default function ListView({ films }: Props) {
     handleAtualizar();
   };
 
+  const atualizarMusica = async (data: ListTypeWithRating) => {
+    const res = await fetch(`/api/upload?file=${data?.music?.replace("uploads/", "")}`);
+    console.log(data.music);
+    console.log(res);
+    if (res.ok) {
+      const blob = await res.blob();
+      console.log(blob);
+
+      setMusica(blob);
+    }
+  }
+
   useEffect(() => {
     if (films) {
       if (films.music) {
-        setMusicaFromDB(films.music);
+        atualizarMusica(films);
       }
       if (films.image) {
         setImageFromDB(films.image);
@@ -258,17 +286,21 @@ export default function ListView({ films }: Props) {
               </div>}
           </div>
 
+          {/* Input para Data */}
+          <DatePickerDemo
+            className="w-full justify-start text-left font-normal rounded-full "
+            onSelect={(date) => {
+              setDate(date);
+              if (date)
+                handleUpDate(date);
+            }}
+            selected={date}
+          />
+
           {/* Player do áudio */}
           {musica && (
             <div className="flex flex-col gap-4 p-[8px]">
               <MusicPlayer musica={musica} setAutoPlay={setAutoPlay} autoPlay={autoPlay} handleAtualizaAutoPlay={handleAtualizaAutoPlay} />
-            </div>
-          )}
-
-          {/* Exibir a música do banco, se houver */}
-          {!musica && musicaFromDB && (
-            <div className="flex flex-col gap-4 p-[8px]">
-              <MusicPlayer url={musicaFromDB} setAutoPlay={setAutoPlay} autoPlay={autoPlay} handleAtualizaAutoPlay={handleAtualizaAutoPlay} />
             </div>
           )}
 
