@@ -16,12 +16,11 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16'  # Ajuste de acordo com a versão do Node.js que você está usando
+        node-version: '20.10.0'
 
     - name: Install dependencies
       run: npm install
 
-      # gera os tipos do prisma 
     - name: Generate Prisma Client
       run: npx prisma generate
 
@@ -38,7 +37,7 @@ jobs:
         target: '~/repo/movie-love'  # O caminho no servidor
 
     - name: Restart PM2 process
-      run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pm2 restart <seu-app-pm2>"
+      run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pm2 restart <movie-love>"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
 
