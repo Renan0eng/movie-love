@@ -37,7 +37,7 @@ jobs:
         target: '~/repo/movie-love'  # O caminho no servidor
 
     - name: Restart PM2 process
-      run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pm2 restart <movie-love>"
+      run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pm2 restart movie-love"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
 
