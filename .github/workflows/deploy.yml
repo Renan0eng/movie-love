@@ -36,7 +36,12 @@ jobs:
         source: './'  # O diretório do seu projeto
         target: '~/repo/movie-love'  # O caminho no servidor
 
-    - name: Restart PM2 process
-      run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pm2 restart movie-love"
+    - name: Restart PM2 process stop
+      run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pm2 stop movie-love"
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY2 }}
+
+    - name: Start PM2 process start
+      run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pm2 start movie-love"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY2 }}
