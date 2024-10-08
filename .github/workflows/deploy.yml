@@ -30,7 +30,6 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}  # Seu host (VPS)
         username: ${{ secrets.SERVER_USER }}  # Usuário SSH configurado
         key: ${{ secrets.SERVER_SSH_KEY }}  # Chave SSH privada armazenada no GitHub Secrets
-        port: 22  # Porta padrão do SSH
         script: |
           cd ~/repo/movie-love  
           git pull
