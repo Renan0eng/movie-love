@@ -33,9 +33,7 @@ jobs:
         port: 22  # Porta padrão do SSH
         script: |
           cd ~/repo/movie-love  
-          git config --global credential.helper store  
-          echo "https://${{ secrets.GIT_TOKEN }}:x-oauth-basic@github.com" > ~/.git-credentials 
-          git pull origin master  
+          git pull
           npm install 
           npx prisma generate  
           npm run build 
