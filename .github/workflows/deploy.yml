@@ -1,42 +1,40 @@
-name: Deploy PM2
+name: Deploy to VPS
 
 on:
   push:
     branches:
-      - master  # Define a branch master como gatilho para o deploy
+      - master  # Define a branch que dispara o workflow
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    # Passo 1: Faz checkout do repositório
+    - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        repository: 'Renan0eng/movie-love'
+        token: ${{ secrets.GIT_TOKEN }}  # Necessário para repositórios privados
 
+    # Passo 2: Configurar Node.js
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '20.10.0'
+        node-version: '20.x'  # Escolhe a versão do Node.js
 
-    - name: Install dependencies
-      run: npm install
-
-    - name: Generate Prisma Client
-      run: npx prisma generate
-
-    - name: Build project
-      run: npm run build  # Caso precise construir o projeto
-
-    - name: Copy files via SSH
-      uses: appleboy/scp-action@v0.1.3
+    # Passo 3: Conectar à VPS e atualizar repositório
+    - name: Update repository on VPS
+      uses: appleboy/ssh-action@v0.1.3
       with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        source: './'  # O diretório do seu projeto
-        target: '~/repo/movie-love'  # O caminho no servidor
-
-    - name: Restart PM2 process
-      run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pm2 restart movie-love"
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY2 }}
+        host: ${{ secrets.SERVER_HOST }}  # Seu host (VPS)
+        username: ${{ secrets.SERVER_USER }}  # Usuário SSH configurado
+        key: ${{ secrets.SERVER_SSH_KEY }}  # Chave SSH privada armazenada no GitHub Secrets
+        port: 22  # Porta padrão do SSH
+        script: |
+          cd ~/repo/movie-love  # Caminho do repositório na VPS
+          git pull origin master  # Atualiza o repositório com as últimas mudanças
+          npm install  # Instala dependências
+          npx prisma generate  # Gera os tipos do Prisma
+          npm run build  # Constrói o projeto
+          pm2 restart movie-love  # Reinicia o processo no PM2
