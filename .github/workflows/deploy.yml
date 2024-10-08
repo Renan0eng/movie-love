@@ -32,9 +32,11 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}  # Chave SSH privada armazenada no GitHub Secrets
         port: 22  # Porta padrão do SSH
         script: |
-          cd ~/repo/movie-love  # Caminho do repositório na VPS
-          git pull origin master  # Atualiza o repositório com as últimas mudanças
-          npm install  # Instala dependências
-          npx prisma generate  # Gera os tipos do Prisma
-          npm run build  # Constrói o projeto
-          pm2 restart movie-love  # Reinicia o processo no PM2
+          cd ~/repo/movie-love  
+          git config --global credential.helper store  
+          echo "https://${{ secrets.PAT_GITHUB_TOKEN }}:x-oauth-basic@github.com" > ~/.git-credentials 
+          git pull origin master  
+          npm install 
+          npx prisma generate  
+          npm run build 
+          pm2 restart movie-love  
