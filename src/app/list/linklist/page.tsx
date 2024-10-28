@@ -10,6 +10,7 @@ import { list } from "postcss";
 // export type ListItemTypeWithRating = Prisma.ListItemGetPayload<{
 //   include: {
 //     rating: true
+//   asdasda
 //   }
 // }>
 
